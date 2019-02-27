@@ -1,10 +1,10 @@
-def modulePath;
+def modulePath
 def modulesArray = [
     'https://github.com/PaNuMo/test-module-one',
     'https://github.com/PaNuMo/test-module-two',
     'https://github.com/PaNuMo/test-module-three',
     'Build/Deploy All'
-];
+]
 
 pipeline {
     agent any
@@ -35,9 +35,10 @@ pipeline {
                     def splittedUrl = params.moduleGitUrl.split('/')
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-                    for (int i = 0; i < modulesArray.length; i++) {
-                        println('now build.. ' + modulesArray[i])
-                    }
+                    
+
+                    echo modulesArray
+                    echo modulesArray.length
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
