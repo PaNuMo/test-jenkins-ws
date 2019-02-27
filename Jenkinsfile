@@ -1,3 +1,4 @@
+#!groovy​
 
 def modulesArray = [
     'https://github.com/PaNuMo/test-module-one',
