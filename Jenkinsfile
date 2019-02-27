@@ -34,6 +34,16 @@ pipeline {
 
         stage('Checkout Module') {
             steps {
+                script {
+                    println('************************')
+
+                    println(MODULE_PATH)
+
+                    def urlArray = params.moduleGitUrl.split('/')[0]
+                    println(urlArray[0])
+                    println(urlArray.length)
+                }
+
                 dir(params.workspacePath) {
                     checkout([
                         $class: 'GitSCM',
