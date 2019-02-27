@@ -26,7 +26,6 @@ pipeline {
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: '*/master']],
-                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: params.workspacePath]],
                     userRemoteConfigs: [[url: env.GIT_URL]]
                 ])
             }
@@ -39,22 +38,19 @@ pipeline {
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
                 }
 
-                dir(params.workspacePath) {
+
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
                         extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
                         userRemoteConfigs: [[url: params.moduleGitUrl]]
                     ])
-                }
 	          }
 	      }
 
         stage('Build') {
             steps {
-                dir(params.workspacePath) {
-                    sh './gradlew clean deploy'
-                }
+                sh './gradlew clean deploy'
             }
         }
 
