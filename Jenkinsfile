@@ -44,8 +44,8 @@ pipeline {
                     extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
                     userRemoteConfigs: [[url: params.moduleGitUrl]]
                 ])
-	          }
-	      }
+	        }
+	    }
 
         stage('Build') {
             steps {
@@ -62,12 +62,13 @@ pipeline {
 
             steps {
                 sh 'cp -a bundles/osgi/modules/* /home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/osgi/modules/'
-                sh 'pwd'
             }
         }
 
         stage('Workspace Cleanup') {
-            deleteDir()
+            steps {
+                deleteDir()
+            }
         }
     }
 }
