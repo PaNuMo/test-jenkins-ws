@@ -8,7 +8,6 @@ pipeline {
     }
 
     parameters {
-        string(defaultValue: '/var/lib/jenkins/jenkins-ws', description: '', name: 'workspacePath')
         choice(
             choices: [
                 'https://github.com/PaNuMo/test-module-one',
@@ -36,14 +35,16 @@ pipeline {
                 script {
                     def splittedUrl = params.moduleGitUrl.split('/')
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/master']],
+                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+                        userRemoteConfigs: [[url: params.moduleGitUrl]]
+                    ])
                 }
 
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-                    userRemoteConfigs: [[url: params.moduleGitUrl]]
-                ])
+
 	        }
 	    }
 
@@ -61,7 +62,6 @@ pipeline {
             }
 
             steps {
-                sh "echo ${params.deployToServer}"
                 sh 'cp -a bundles/osgi/modules/* /home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/osgi/modules/'
             }
         }
