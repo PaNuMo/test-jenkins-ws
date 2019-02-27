@@ -35,23 +35,20 @@ pipeline {
         stage('Checkout Module') {
             steps {
                 script {
-                    println('************************')
-
-                    println(env.MODULE_PATH)
 
                     def splittedUrl = params.moduleGitUrl.split('/')
-                    env.MODULE_PATH = 'modules/' + splittedUrl[splittedUrl.length - 1]
+                    def MODULE_PATH = 'modules/' + splittedUrl[splittedUrl.length - 1]
                     println('************************')
                     println('************************')
                     println('************************')
-                    println(env.MODULE_PATH)
+                    println(MODULE_PATH)
                 }
 
                 dir(params.workspacePath) {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
-                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: env.MODULE_PATH]],
+                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: MODULE_PATH]],
                         userRemoteConfigs: [[url: params.moduleGitUrl]]
                     ])
                 }
