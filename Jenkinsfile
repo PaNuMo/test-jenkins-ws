@@ -12,11 +12,16 @@ pipeline {
 
     parameters {
         string(defaultValue: '/var/lib/jenkins/jenkins-ws', description: '', name: 'workspacePath')
+        choice(choices: [
+                'https://github.com/PaNuMo/test-module-one',
+                'https://github.com/PaNuMo/test-module-two',
+                'https://github.com/PaNuMo/test-module-three'],
+            description: 'Which module build/deploy?', name: 'moduleGitUrl')
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
     }
 
     stages {
-        stage('Checkout Workspace') {
+        stage('Workspace Setup') {
             steps {
                 checkout([
                     $class: 'GitSCM',
@@ -34,7 +39,7 @@ pipeline {
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
                         extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: env.MODULE_PATH]],
-                        userRemoteConfigs: [[url: 'https://github.com/PaNuMo/test-module-three']]
+                        userRemoteConfigs: [[url: params.moduleGitUrl]]
                     ])
                 }
 	          }
