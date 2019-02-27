@@ -39,8 +39,7 @@ pipeline {
 
                     println(MODULE_PATH)
 
-                    def urlArray = params.moduleGitUrl.split('/')[0]
-                    println(urlArray[0])
+                    def urlArray = params.moduleGitUrl.split('/')
                     println(urlArray.length)
                 }
 
