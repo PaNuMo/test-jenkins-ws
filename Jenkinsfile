@@ -1,3 +1,4 @@
+def modulePath;
 
 pipeline {
     agent any
@@ -37,18 +38,18 @@ pipeline {
                 script {
 
                     def splittedUrl = params.moduleGitUrl.split('/')
-                    def MODULE_PATH = 'modules/' + splittedUrl[splittedUrl.length - 1]
+                    modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
                     println('************************')
                     println('************************')
                     println('************************')
-                    println(MODULE_PATH)
+                    println(modulePath)
                 }
 
                 dir(params.workspacePath) {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
-                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: MODULE_PATH]],
+                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
                         userRemoteConfigs: [[url: params.moduleGitUrl]]
                     ])
                 }
