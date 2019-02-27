@@ -1,4 +1,4 @@
-def modulePath
+
 def modulesArray = [
     'https://github.com/PaNuMo/test-module-one',
     'https://github.com/PaNuMo/test-module-two',
@@ -32,12 +32,12 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    def splittedUrl = params.moduleGitUrl.split('/')
-                    modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
-
                     if (params.moduleGitUrl == modulesArray[modulesArray.size()-1]) {
                         for (int i = 0; i < modulesArray.size()-1; i++) {
                             def gitUrl = modulesArray[i];
+                            def splittedUrl = gitUrl.split('/')
+                            def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+
                             println('Downloading from ' + gitUrl)
                             checkout([
                                 $class: 'GitSCM',
@@ -48,6 +48,9 @@ pipeline {
                         }
                     }
                     else {
+                        def splittedUrl = params.moduleGitUrl.split('/')
+                        def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+
                         println('Downloading from ' + params.moduleGitUrl)
                         checkout([
                             $class: 'GitSCM',
