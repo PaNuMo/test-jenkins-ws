@@ -35,10 +35,9 @@ pipeline {
                     def splittedUrl = params.moduleGitUrl.split('/')
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-
-
-
-                    echo modulesArray.length
+                    for (int i = 0; i < modulesArray.size(); i++) {
+                        println('now build.. ' + modulesArray[i])
+                    }
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
