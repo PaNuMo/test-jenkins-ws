@@ -39,8 +39,14 @@ pipeline {
 
                     println(MODULE_PATH)
 
-                    def urlArray = params.moduleGitUrl.split('/')
-                    println(urlArray.length)
+                    def splittedUrl = params.moduleGitUrl.split('/')
+                    println(splittedUrl[splittedUrl.length - 1])
+
+                    MODULE_PATH = 'modules/' + splittedUrl[splittedUrl.length - 1]
+                    println('************************')
+                    println('************************')
+                    println('************************')
+                    println(MODULE_PATH)
                 }
 
                 dir(params.workspacePath) {
