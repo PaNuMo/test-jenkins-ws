@@ -35,15 +35,20 @@ pipeline {
                     def splittedUrl = params.moduleGitUrl.split('/')
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-                    for (int i = 0; i < modulesArray.size(); i++) {
-                        println('now build.. ' + modulesArray[i])
+                    if (params.moduleGitUrl == 'Deploy All') {
+                        for (int i = 0; i < modulesArray.size(); i++) {
+                            println('now build.. ' + modulesArray[i])
+                        }
                     }
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: '*/master']],
-                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-                        userRemoteConfigs: [[url: params.moduleGitUrl]]
-                    ])
+                    else {
+                        println('Downloading from ' + params.moduleGitUrl)
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: '*/master']],
+                            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+                            userRemoteConfigs: [[url: params.moduleGitUrl]]
+                        ])
+                    }
                 }
 	        }
 	    }
