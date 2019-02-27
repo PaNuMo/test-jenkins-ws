@@ -1,5 +1,4 @@
 def modulePath;
-def temp1;
 
 pipeline {
     agent any
@@ -62,10 +61,7 @@ pipeline {
             }
 
             steps {
-                script {
-                    temp1 = '777'
-                }
-                sh 'echo slkamswww ${param.workspacePath}'
+                sh 'echo ${param.deployToServer}'
                 sh 'cp -a bundles/osgi/modules/* /home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/osgi/modules/'
             }
         }
