@@ -1,4 +1,10 @@
 def modulePath;
+def modulesArray = [
+    'https://github.com/PaNuMo/test-module-one',
+    'https://github.com/PaNuMo/test-module-two',
+    'https://github.com/PaNuMo/test-module-three',
+    'Build/Deploy All'
+];
 
 pipeline {
     agent any
@@ -8,14 +14,7 @@ pipeline {
     }
 
     parameters {
-        choice(
-            choices: [
-                'https://github.com/PaNuMo/test-module-one',
-                'https://github.com/PaNuMo/test-module-two',
-                'https://github.com/PaNuMo/test-module-three',
-                'Build/Deploy All'
-            ],
-            description: 'Which module build/deploy?', name: 'moduleGitUrl')
+        choice(choices: modulesArray, description: 'Which module build/deploy?', name: 'moduleGitUrl')
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
     }
 
@@ -36,6 +35,9 @@ pipeline {
                     def splittedUrl = params.moduleGitUrl.split('/')
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
+                    for (int i = 0; i < modulesArray.length; i++) {
+                        println('now build.. ' + modulesArray[i])
+                    }
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
@@ -43,8 +45,6 @@ pipeline {
                         userRemoteConfigs: [[url: params.moduleGitUrl]]
                     ])
                 }
-
-
 	        }
 	    }
 
