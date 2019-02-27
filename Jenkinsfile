@@ -35,7 +35,7 @@ pipeline {
                     def splittedUrl = params.moduleGitUrl.split('/')
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-                    if (params.moduleGitUrl == 'Deploy All') {
+                    if (params.moduleGitUrl == modulesArray[modulesArray.size()-1]) {
                         for (int i = 0; i < modulesArray.size()-1; i++) {
                             def gitUrl = modulesArray[i];
                             println('Downloading from ' + gitUrl)
