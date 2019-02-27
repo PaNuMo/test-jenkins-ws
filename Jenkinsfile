@@ -35,9 +35,9 @@ pipeline {
                     def splittedUrl = params.moduleGitUrl.split('/')
                     modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-                    
 
-                    echo modulesArray
+
+
                     echo modulesArray.length
                     checkout([
                         $class: 'GitSCM',
