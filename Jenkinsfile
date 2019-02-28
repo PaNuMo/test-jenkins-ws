@@ -32,14 +32,17 @@ pipeline {
             }
         }
 
-        stage('Setup Params'){
-            
+        stage('Setup Params'){           
             steps {
                 script{
-                def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+                    def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+                    println(optionsJSON.moduleOptions)
+                }
 
-                println(optionsJSON)
-            }
+                println("Changing deployToServer param value to false")
+                parameters {
+                    booleanParam(defaultValue: false, description: '', name: 'deployToServer')
+                }
             }
         }
 
