@@ -83,7 +83,7 @@ void checkoutModule(moduleGitUrl) {
     def splittedUrl = moduleGitUrl.split('/')                    
     def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-    println('Downloading from ' + moduleGitUrl)
+    println('Start downloading module from ' + moduleGitUrl)
     checkout([
         $class: 'GitSCM',
         branches: [[name: '*/master']],
