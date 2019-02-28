@@ -6,7 +6,7 @@ def modulesArray = [
     'https://github.com/PaNuMo/test-module-three',
     'Build/Deploy All'
 ]
-def moduleNames = []
+//def moduleNames = []
 
 node {
     checkout([
