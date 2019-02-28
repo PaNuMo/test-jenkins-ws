@@ -34,7 +34,7 @@ pipeline {
 
         stage('Setup Params'){
             
-            steps {
+            block {
                 def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
 
                 println(optionsJSON)
