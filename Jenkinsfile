@@ -11,11 +11,11 @@ def moduleOptions = {}
 def moduleNames = []
 
 node {
-    println("LKSMLSKMLSKMSLKSMSLKMSLKSMLKS   "+  env.GIT_URL)
+    println("LKSMLSKMLSKMSLKSMSLKMSLKSMLKS   "+  GIT_URL)
     checkout([
         $class: 'GitSCM',
         branches: [[name: '*/master']],
-        userRemoteConfigs: [[url: env.GIT_URL]]
+        userRemoteConfigs: [[url: 'https://github.com/PaNuMo/test-jenkins-ws']]
     ])
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
