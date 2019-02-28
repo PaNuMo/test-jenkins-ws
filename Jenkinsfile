@@ -9,14 +9,13 @@ def modulesArray = [
 
 node {
     checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    userRemoteConfigs: [[url: env.GIT_URL]]
-                ])
+        $class: 'GitSCM',
+        branches: [[name: '*/master']],
+        userRemoteConfigs: [[url: env.GIT_URL]]
+    ])
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
-
-    println(optionsJSON)
+    println(optionsJSON.get("moduleOptions"))
 }
 
 pipeline {
