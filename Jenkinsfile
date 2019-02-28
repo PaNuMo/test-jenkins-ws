@@ -11,7 +11,7 @@ def moduleOptions = {}
 def moduleNames = []
 
 node {
-    println("LKSMLSKMLSKMSLKSMSLKMSLKSMLKS")
+    println("LKSMLSKMLSKMSLKSMSLKMSLKSMLKS   "+  env.GIT_URL)
     checkout([
         $class: 'GitSCM',
         branches: [[name: '*/master']],
