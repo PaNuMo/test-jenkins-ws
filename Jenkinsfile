@@ -20,8 +20,6 @@ node {
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
     moduleOptions = optionsJSON.get("moduleOptions")
     moduleNames.addAll(moduleOptions.keySet())
-    println("*********************************")
-    println(moduleNames.getClass())
 }
 
 pipeline {
@@ -43,14 +41,12 @@ pipeline {
                 script {
                     if (params.moduleName == moduleNames[moduleNames.size()-1]) {
                         for (int i = 0; i < moduleNames.size()-1; i++) {
-                            def moduleGitUrl = moduleOptions.get(moduleName)
-                            checkoutModule(moduleGitUrl)
+                            checkoutModule(moduleNames[i])
                         }
                     }
                     else {
                         def moduleGitUrl = moduleOptions.get(params.moduleName)
-                        println("moduleGitUrl....... " + moduleGitUrl)
-                        checkoutModule(moduleGitUrl)
+                        checkoutModule(params.moduleName)
                     }
                 }
 	        }
@@ -78,7 +74,8 @@ pipeline {
     }
 }
 
-void checkoutModule(moduleGitUrl) {
+void checkoutModule(moduleName) {
+    def moduleGitUrl = moduleOptions.get(moduleName)
     def splittedUrl = moduleGitUrl.split('/')                    
     def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
