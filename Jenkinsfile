@@ -11,7 +11,6 @@ def moduleOptions = {}
 def moduleNames = []
 
 node {
-    println("LKSMLSKMLSKMSLKSMSLKMSLKSMLKS   ")
     checkout([
         $class: 'GitSCM',
         branches: [[name: '*/master']],
@@ -42,14 +41,14 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    if (moduleName == moduleNames[moduleNames.size()-1]) {
+                    if (params.moduleName == moduleNames[moduleNames.size()-1]) {
                         for (int i = 0; i < moduleNames.size()-1; i++) {
                             def moduleGitUrl = moduleOptions.get(moduleName)
                             checkoutModule(moduleGitUrl)
                         }
                     }
                     else {
-                        def moduleGitUrl = moduleOptions.get(moduleName)
+                        def moduleGitUrl = moduleOptions.get(params.moduleName)
                         println("moduleGitUrl....... " + moduleGitUrl)
                         checkoutModule(moduleGitUrl)
                     }
