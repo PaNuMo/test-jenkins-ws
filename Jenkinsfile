@@ -8,7 +8,7 @@ def modulesArray = [
 ]
 
 def moduleOptions = {}
-def moduleNames = new ArrayList<String>()
+def moduleNames = []
 
 node {
     checkout([
