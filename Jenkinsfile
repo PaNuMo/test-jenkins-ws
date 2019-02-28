@@ -77,7 +77,7 @@ pipeline {
 
         stage('Workspace Cleanup') {
             steps {
-                deleteDir()
+                //deleteDir()
             }
         }
     }
