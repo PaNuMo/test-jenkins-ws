@@ -7,7 +7,17 @@ def modulesArray = [
     'Build/Deploy All'
 ]
 
+node {
+    checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/master']],
+                    userRemoteConfigs: [[url: env.GIT_URL]]
+                ])
 
+    def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+
+    println(optionsJSON)
+}
 
 pipeline {
     agent any
@@ -22,29 +32,6 @@ pipeline {
     }
 
     stages {
-        stage('Workspace Setup') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    userRemoteConfigs: [[url: env.GIT_URL]]
-                ])
-            }
-        }
-
-        stage('Setup Params'){           
-            steps {
-                script{
-                    def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
-                    println(optionsJSON.moduleOptions)
-                }
-
-                println("Changing deployToServer param value to false")
-                parameters {
-                    booleanParam(defaultValue: false, description: '', name: 'deployToServer')
-                }
-            }
-        }
 
         stage('Checkout Module(s)') {
             steps {
