@@ -75,9 +75,7 @@ pipeline {
             }
         }
 
-        stage('Workspace Cleanup') {
 
-        }
     }
 }
 
