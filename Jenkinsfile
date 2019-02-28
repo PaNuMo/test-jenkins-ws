@@ -15,7 +15,9 @@ node {
     ])
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
-    println(optionsJSON.get("moduleOptions"))
+    def moduleOptions = optionsJSON.get("moduleOptions")
+
+    println(moduleOptions.keySet())
 }
 
 pipeline {
@@ -26,7 +28,7 @@ pipeline {
     }
 
     parameters {
-        choice(choices: modulesArray, description: 'Which module build/deploy?', name: 'moduleGitUrl')
+        choice(choices: moduleOptions.keySet(), description: 'Which module build/deploy?', name: 'moduleGitUrl')
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
     }
 
