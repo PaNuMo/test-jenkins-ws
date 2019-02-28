@@ -6,6 +6,7 @@ def modulesArray = [
     'https://github.com/PaNuMo/test-module-three',
     'Build/Deploy All'
 ]
+def moduleNames
 
 node {
     checkout([
@@ -16,7 +17,7 @@ node {
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
     def moduleOptions = optionsJSON.get("moduleOptions")
-    def moduleNames = moduleOptions.keySet()
+    moduleNames = moduleOptions.keySet()
     println(moduleOptions.keySet())
 }
 
