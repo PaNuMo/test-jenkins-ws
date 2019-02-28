@@ -29,7 +29,7 @@ pipeline {
     }
 
     parameters {
-        choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleGitUrl')
+        choice(choices: modulesArray, description: 'Which module build/deploy?', name: 'moduleGitUrl')
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
     }
 
