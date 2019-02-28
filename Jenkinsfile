@@ -29,7 +29,7 @@ pipeline {
     }
 
     parameters {
-        choice(choices: modulesArray, description: 'Which module build/deploy?', name: 'moduleGitUrl')
+        choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName')
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
     }
 
@@ -38,33 +38,39 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    if (params.moduleGitUrl == modulesArray[modulesArray.size()-1]) {
-                        for (int i = 0; i < modulesArray.size()-1; i++) {
-                            def gitUrl = modulesArray[i];
-                            def splittedUrl = gitUrl.split('/')
-                            def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+                    def moduleGitUrl = moduleOptions.get(moduleName)
+                    println(moduleGitUrl)
 
-                            println('Downloading from ' + gitUrl)
-                            checkout([
-                                $class: 'GitSCM',
-                                branches: [[name: '*/master']],
-                                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-                                userRemoteConfigs: [[url: gitUrl]]
-                            ])
-                        }
-                    }
-                    else {
-                        def splittedUrl = params.moduleGitUrl.split('/')
-                        def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+                    def splittedUrl = params.moduleGitUrl.split('/')                    
+                    def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-                        println('Downloading from ' + params.moduleGitUrl)
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: '*/master']],
-                            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-                            userRemoteConfigs: [[url: params.moduleGitUrl]]
-                        ])
-                    }
+                    // if (params.moduleGitUrl == moduleNames[moduleNames.size()-1]) {
+                    //     for (int i = 0; i < moduleNames.size()-1; i++) {
+                    //         def gitUrl = moduleNames[i];
+                    //         def splittedUrl = gitUrl.split('/')
+                    //         def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+
+                    //         println('Downloading from ' + gitUrl)
+                    //         checkout([
+                    //             $class: 'GitSCM',
+                    //             branches: [[name: '*/master']],
+                    //             extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+                    //             userRemoteConfigs: [[url: gitUrl]]
+                    //         ])
+                    //     }
+                    // }
+                    // else {
+                    //     def splittedUrl = params.moduleGitUrl.split('/')
+                    //     def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+
+                    //     println('Downloading from ' + params.moduleGitUrl)
+                    //     checkout([
+                    //         $class: 'GitSCM',
+                    //         branches: [[name: '*/master']],
+                    //         extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+                    //         userRemoteConfigs: [[url: params.moduleGitUrl]]
+                    //     ])
+                    // }
                 }
 	        }
 	    }
