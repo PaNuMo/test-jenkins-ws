@@ -40,39 +40,15 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    def moduleGitUrl = moduleOptions.get(moduleName)
-                    println(moduleGitUrl)
-
-                    def splittedUrl = params.moduleGitUrl.split('/')                    
-                    def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
-
-                    // if (params.moduleGitUrl == moduleNames[moduleNames.size()-1]) {
-                    //     for (int i = 0; i < moduleNames.size()-1; i++) {
-                    //         def gitUrl = moduleNames[i];
-                    //         def splittedUrl = gitUrl.split('/')
-                    //         def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
-
-                    //         println('Downloading from ' + gitUrl)
-                    //         checkout([
-                    //             $class: 'GitSCM',
-                    //             branches: [[name: '*/master']],
-                    //             extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-                    //             userRemoteConfigs: [[url: gitUrl]]
-                    //         ])
-                    //     }
-                    // }
-                    // else {
-                    //     def splittedUrl = params.moduleGitUrl.split('/')
-                    //     def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
-
-                    //     println('Downloading from ' + params.moduleGitUrl)
-                    //     checkout([
-                    //         $class: 'GitSCM',
-                    //         branches: [[name: '*/master']],
-                    //         extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-                    //         userRemoteConfigs: [[url: params.moduleGitUrl]]
-                    //     ])
-                    // }
+                    if (params.moduleGitUrl == moduleNames[moduleNames.size()-1]) {
+                        for (int i = 0; i < moduleNames.size()-1; i++) {
+                            checkoutModule(moduleNames[i])
+                        }
+                    }
+                    else {
+                        def moduleGitUrl = moduleOptions.get(moduleName)
+                        checkoutModule(moduleGitUrl)
+                    }
                 }
 	        }
 	    }
@@ -101,4 +77,17 @@ pipeline {
             }
         }
     }
+}
+
+void checkoutModule(moduleGitUrl) {
+    def splittedUrl = moduleGitUrl.split('/')                    
+    def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+
+    println('Downloading from ' + moduleGitUrl)
+    checkout([
+        $class: 'GitSCM',
+        branches: [[name: '*/master']],
+        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+        userRemoteConfigs: [[url: moduleGitUrl]]
+    ])
 }
