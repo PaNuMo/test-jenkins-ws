@@ -43,11 +43,12 @@ pipeline {
                     if (moduleName == moduleNames[moduleNames.size()-1]) {
                         for (int i = 0; i < moduleNames.size()-1; i++) {
                             def moduleGitUrl = moduleOptions.get(moduleName)
-                            checkoutModule(moduleNames[i])
+                            checkoutModule(moduleGitUrl)
                         }
                     }
                     else {
                         def moduleGitUrl = moduleOptions.get(moduleName)
+                        println("moduleGitUrl....... " + moduleGitUrl)
                         checkoutModule(moduleGitUrl)
                     }
                 }
