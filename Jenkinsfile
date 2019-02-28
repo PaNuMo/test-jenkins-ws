@@ -17,7 +17,7 @@ node {
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
     def moduleOptions = optionsJSON.get("moduleOptions")
-    moduleNames = moduleOptions.keySet()
+    moduleNames = moduleOptions.keySet().toArray()
     println(moduleNames.getClass())
 }
 
