@@ -7,6 +7,10 @@ def modulesArray = [
     'Build/Deploy All'
 ]
 
+def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+
+println(optionsJSON)
+
 pipeline {
     agent any
 
@@ -78,7 +82,7 @@ pipeline {
             }
 
             steps {
-                sh 'cp -a bundles/osgi/modules/* /home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/osgi/modules/'
+                sh 'cp -a bundles/osgi/modules/* /home/pnunez/Documents/Liferay/DEV-liferay-ce-portal-7.1.2-ga3/osgi/modules/'
             }
         }
 
