@@ -7,8 +7,8 @@ def modulesArray = [
     'Build/Deploy All'
 ]
 
-def moduleOptions = null
-def moduleNames = null
+def moduleOptions = {}
+def moduleNames = new ArrayList<String>()
 
 node {
     checkout([
@@ -19,7 +19,7 @@ node {
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
     moduleOptions = optionsJSON.get("moduleOptions")
-    moduleNames = moduleOptions.keySet().join('\n')
+    moduleNames.addAll(moduleOptions.keySet())
     println(moduleNames.getClass())
 }
 
@@ -40,8 +40,9 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    if (params.moduleGitUrl == moduleNames[moduleNames.size()-1]) {
+                    if (moduleName == moduleNames[moduleNames.size()-1]) {
                         for (int i = 0; i < moduleNames.size()-1; i++) {
+                            def moduleGitUrl = moduleOptions.get(moduleName)
                             checkoutModule(moduleNames[i])
                         }
                     }
