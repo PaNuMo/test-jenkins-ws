@@ -7,9 +7,11 @@ def modulesArray = [
     'Build/Deploy All'
 ]
 
-def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+node {
+    def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
 
-println(optionsJSON)
+    println(optionsJSON)
+}
 
 pipeline {
     agent any
