@@ -41,12 +41,12 @@ pipeline {
                 script {
                     if (params.moduleName == moduleNames[moduleNames.size()-1]) {
                         for (int i = 0; i < moduleNames.size()-1; i++) {
-                            checkoutModule(moduleNames[i])
+                            checkoutModule(moduleNames[i], moduleOptions)
                         }
                     }
                     else {
                         def moduleGitUrl = moduleOptions.get(params.moduleName)
-                        checkoutModule(params.moduleName)
+                        checkoutModule(params.moduleName, moduleOptions)
                     }
                 }
 	        }
@@ -74,7 +74,7 @@ pipeline {
     }
 }
 
-void checkoutModule(moduleName) {
+void checkoutModule(moduleName, moduleOptions) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     def splittedUrl = moduleGitUrl.split('/')                    
     def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
