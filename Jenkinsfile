@@ -7,11 +7,7 @@ def modulesArray = [
     'Build/Deploy All'
 ]
 
-node {
-    def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
 
-    println(optionsJSON)
-}
 
 pipeline {
     agent any
@@ -34,6 +30,12 @@ pipeline {
                     userRemoteConfigs: [[url: env.GIT_URL]]
                 ])
             }
+        }
+
+        node {
+            def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+
+            println(optionsJSON)
         }
 
         stage('Checkout Module(s)') {
