@@ -1,6 +1,7 @@
 #!groovy​
 
-
+List params = []
+List props = []
 
 com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition test = new com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition(
         "name",
