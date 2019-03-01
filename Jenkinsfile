@@ -56,7 +56,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
             "", 
             false,
             false, 
-            5, 
+            10, 
             "Which module(s) build/deploy?", 
             ",");
 
