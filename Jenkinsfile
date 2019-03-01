@@ -38,7 +38,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             "multiselect", 
             ",");
 
-params << test
+params << extendedChoiceParam
 props << parameters(params)
 
 properties(props)
