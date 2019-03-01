@@ -34,8 +34,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             false, 
             3, 
             "multiselect", 
-            ",") 
-
+            ",");
 
 def moduleOptions = {}
 def moduleNames = []
@@ -67,11 +66,12 @@ pipeline {
         jdk 'Jenkins_Java'
     }
 
-    parameters {        
-        choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName')
-        booleanParam(defaultValue: true, description: '', name: 'deployToServer')
-        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')
+    parameters {[        
+        choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
+        booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
+        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),
         extendedChoiceParam
+    ] 
     }
 
     stages {
