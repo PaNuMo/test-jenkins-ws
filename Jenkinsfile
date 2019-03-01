@@ -28,7 +28,7 @@ node {
 }
 
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
-            "name", 
+            "moduleName2", 
             "PT_CHECKBOX", 
             moduleNames.join(","), 
             "",
@@ -83,6 +83,7 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
+                    println("*&&*&* " + params.moduleName2)
                     if (params.moduleName == moduleNames[moduleNames.size()-1]) {
                         for (int i = 0; i < moduleNames.size()-1; i++) {
                             checkoutModule(moduleNames[i], moduleOptions)
