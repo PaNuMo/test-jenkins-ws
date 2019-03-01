@@ -1,12 +1,5 @@
 #!groovy​
 
-def modulesArray = [
-    'https://github.com/PaNuMo/test-module-one',
-    'https://github.com/PaNuMo/test-module-two',
-    'https://github.com/PaNuMo/test-module-three',
-    'Build/Deploy All'
-]
-
 def moduleOptions = {}
 def moduleNames = []
 
