@@ -30,7 +30,7 @@ node {
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
             "name", 
             "PT_CHECKBOX", 
-            moduleNames, 
+            moduleNames.join(","), 
             "",
             "", 
             "",
