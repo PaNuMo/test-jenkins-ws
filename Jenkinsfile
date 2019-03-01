@@ -4,6 +4,8 @@
 
 import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
+List params = []
+List props = []
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name", 
             "PT_MULTI_SELECT", 
             "blue,green,yellow,blue", 
@@ -36,6 +38,11 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             "multiselect", 
             ",");
 
+params << test
+props << parameters(params)
+
+properties(props)
+
 def moduleOptions = {}
 def moduleNames = []
 
@@ -66,12 +73,11 @@ pipeline {
         jdk 'Jenkins_Java'
     }
 
-    parameters [        
-        choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
-        booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
-        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),
-        extendedChoiceParam
-    ] 
+    parameters {        
+        choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName')
+        booleanParam(defaultValue: true, description: '', name: 'deployToServer')
+        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')
+    } 
     
 
     stages {
