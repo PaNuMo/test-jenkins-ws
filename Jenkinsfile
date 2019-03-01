@@ -4,6 +4,29 @@
 
 import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
+def moduleOptions = {}
+def moduleNames = []
+
+def serverOptions = {}
+def serverNames = []
+def serverDeployPath = ''
+
+node {
+    checkout([
+        $class: 'GitSCM',
+        branches: [[name: '*/master']],
+        userRemoteConfigs: [[url: 'https://github.com/PaNuMo/test-jenkins-ws']]
+    ])
+
+    def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+    
+    moduleOptions = optionsJSON.get("moduleOptions")
+    moduleNames.addAll(moduleOptions.keySet())
+
+    serverOptions = optionsJSON.get("environments")
+    serverNames.addAll(serverOptions.keySet())
+}
+
 List params = [choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
         booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
         choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')]
@@ -40,31 +63,12 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             "select something", 
             ",");
 
-params << extendedChoiceParam
 
 
-def moduleOptions = {}
-def moduleNames = []
 
-def serverOptions = {}
-def serverNames = []
-def serverDeployPath = ''
 
-node {
-    checkout([
-        $class: 'GitSCM',
-        branches: [[name: '*/master']],
-        userRemoteConfigs: [[url: 'https://github.com/PaNuMo/test-jenkins-ws']]
-    ])
 
-    def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
-    
-    moduleOptions = optionsJSON.get("moduleOptions")
-    moduleNames.addAll(moduleOptions.keySet())
 
-    serverOptions = optionsJSON.get("environments")
-    serverNames.addAll(serverOptions.keySet())
-}
 
 pipeline {
     agent any
