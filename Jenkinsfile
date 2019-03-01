@@ -27,10 +27,11 @@ node {
     serverNames.addAll(serverOptions.keySet())
 }
 
-def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name", 
+def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
+            "name", 
             "PT_CHECKBOX", 
-            "blue,green,yellow,blue,black", 
-            "PipelineProject",
+            moduleNames, 
+            "",
             "", 
             "",
             "", 
@@ -44,7 +45,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             "", 
             "", 
             "", 
-            "blue,green,yellow,blue,black", 
+            "", 
             "", 
             "", 
             "", 
@@ -55,20 +56,19 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             "", 
             false,
             false, 
-            3, 
-            "select something", 
+            5, 
+            "Which module(s) build/deploy?", 
             ",");
 
 
-properties(
-    [parameters([
+properties([
+    parameters([
+        extendedChoiceParam
         choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
         booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
-        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),
-        extendedChoiceParam
-    ]
-        )]
-)
+        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),        
+    ])
+])
 
 
 pipeline {
@@ -77,13 +77,6 @@ pipeline {
     tools {
         jdk 'Jenkins_Java'
     }
-
-    // parameters {        
-    //     choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName')
-    //     booleanParam(defaultValue: true, description: '', name: 'deployToServer')
-    //     choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')
-
-    // } 
 
     stages {
 
