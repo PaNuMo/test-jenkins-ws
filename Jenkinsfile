@@ -40,7 +40,6 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
 properties([
     parameters([
         extendedChoiceParam,
-        choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
         booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
         choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),        
     ])
@@ -60,21 +59,18 @@ pipeline {
             steps {
                 script {
                     def selectedModules = params.selectedModules.split(",")
-                    for (int i = 0; i < selectedModules.size(); i++) {
-                        def moduleName = selectedModules[i]
-                        def moduleGitUrl = moduleOptions.get(moduleName)
-                        checkoutModule(moduleName, moduleOptions)
+                    if (selectedModules[0] == moduleNames[0]) {
+                        for (int i = 1; i < moduleNames.size(); i++) {
+                            checkoutModule(moduleNames[i], moduleOptions)
+                        }
                     }
-
-                    // if (params.moduleName == moduleNames[moduleNames.size()-1]) {
-                    //     for (int i = 0; i < moduleNames.size()-1; i++) {
-                    //         checkoutModule(moduleNames[i], moduleOptions)
-                    //     }
-                    // }
-                    // else {
-                    //     def moduleGitUrl = moduleOptions.get(params.moduleName)
-                    //     checkoutModule(params.moduleName, moduleOptions)
-                    // }
+                    else {
+                        for (int i = 0; i < selectedModules.size(); i++) {
+                            def moduleName = selectedModules[i]
+                            def moduleGitUrl = moduleOptions.get(moduleName)
+                            checkoutModule(moduleName, moduleOptions)
+                        }
+                    }
                 }
 	        }
 	    }
