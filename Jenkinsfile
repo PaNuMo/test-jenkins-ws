@@ -5,6 +5,7 @@ def moduleNames = []
 
 def serverOptions = {}
 def serverNames = []
+def serverDeployPath = ''
 
 node {
     checkout([
@@ -68,10 +69,9 @@ pipeline {
 
             steps {
                 script{
-                    println("************** " + serverOptions.get(params.serverName))
-                    def testPath = serverOptions.get(params.serverName)
+                    serverDeployPath = serverOptions.get(params.serverName)
                 }
-                sh 'cp -a bundles/osgi/modules/* ${testPath}'
+                sh 'cp -a bundles/osgi/modules/* ${serverDeployPath}'
             }
         }
 
