@@ -27,11 +27,9 @@ node {
     serverNames.addAll(serverOptions.keySet())
 }
 
-List params = []
-List props = []
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name", 
             "PT_CHECKBOX", 
-            "blue,green,yellow,blue", 
+            "blue,green,yellow,blue,black", 
             "PipelineProject",
             "", 
             "",
@@ -67,7 +65,9 @@ properties(
         choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
         booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
         choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),
-        extendedChoiceParam])]
+        extendedChoiceParam
+    ]
+        )]
 )
 
 
@@ -135,14 +135,19 @@ pipeline {
 
 void checkoutModule(moduleName, moduleOptions) {
     def moduleGitUrl = moduleOptions.get(moduleName)
-    def splittedUrl = moduleGitUrl.split('/')                    
-    def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+    if(moduleGitUrl != null){
+        def splittedUrl = moduleGitUrl.split('/')                    
+        def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-    println('Start downloading module from ' + moduleGitUrl)
-    checkout([
-        $class: 'GitSCM',
-        branches: [[name: '*/master']],
-        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-        userRemoteConfigs: [[url: moduleGitUrl]]
-    ])
+        println('Start downloading module from ' + moduleGitUrl)
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: '*/master']],
+            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+            userRemoteConfigs: [[url: moduleGitUrl]]
+        ])
+    }
+    else {
+        println("ERROR: Couldn't find a Git URL for " + moduleName)
+    }
 }
