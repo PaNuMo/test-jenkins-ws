@@ -27,11 +27,11 @@ node {
 
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
     "selectedModules", // Name
-    "PT_CHECKBOX", // Choice mode
+    "PT_CHECKBOX", // Choice type
     moduleNames.join(","), // Items
     "","","","","","","","","","","","","", 
     "","","","","","","","","","",false,false, 
-    10, // Number of items to display
+    10, // Number of visible items
     "Which module(s) build/deploy?", // Description
     "," // Delimiter
 );
@@ -59,16 +59,21 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    println("*&&*&* " + params.selectedModules.split(","))
-                    if (params.moduleName == moduleNames[moduleNames.size()-1]) {
-                        for (int i = 0; i < moduleNames.size()-1; i++) {
-                            checkoutModule(moduleNames[i], moduleOptions)
-                        }
-                    }
-                    else {
-                        def moduleGitUrl = moduleOptions.get(params.moduleName)
+                    def selectedModules = params.selectedModules.split(",")
+                    for (int i = 0; i < selectedModules.size(); i++) {
+                        def moduleGitUrl = moduleOptions.get(selectedModules[i])
                         checkoutModule(params.moduleName, moduleOptions)
                     }
+
+                    // if (params.moduleName == moduleNames[moduleNames.size()-1]) {
+                    //     for (int i = 0; i < moduleNames.size()-1; i++) {
+                    //         checkoutModule(moduleNames[i], moduleOptions)
+                    //     }
+                    // }
+                    // else {
+                    //     def moduleGitUrl = moduleOptions.get(params.moduleName)
+                    //     checkoutModule(params.moduleName, moduleOptions)
+                    // }
                 }
 	        }
 	    }
