@@ -27,10 +27,8 @@ node {
     serverNames.addAll(serverOptions.keySet())
 }
 
-List params2 = [choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
-        booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
-        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')]
-List props2 = []
+List params = []
+List props = []
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name", 
             "PT_CHECKBOX", 
             "blue,green,yellow,blue", 
@@ -48,7 +46,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             "", 
             "", 
             "", 
-            "blue,green,yellow,blue", 
+            "blue,green,yellow,blue,black", 
             "", 
             "", 
             "", 
@@ -64,10 +62,9 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             ",");
 
 
-
-
-
-
+properties(
+  [parameters([extendedChoiceParam])]
+)
 
 
 pipeline {
@@ -81,9 +78,8 @@ pipeline {
         choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName')
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
         choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')
+
     } 
-    
-    params.add(extendedChoiceParam)
 
     stages {
 
