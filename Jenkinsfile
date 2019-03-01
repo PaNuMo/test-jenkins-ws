@@ -2,7 +2,7 @@
 
 
 
-
+import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
 com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition extendedChoiceParameterDefinition = new com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition(
     "OPTION_NAME", // name
