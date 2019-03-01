@@ -61,8 +61,9 @@ pipeline {
                 script {
                     def selectedModules = params.selectedModules.split(",")
                     for (int i = 0; i < selectedModules.size(); i++) {
-                        def moduleGitUrl = moduleOptions.get(selectedModules[i])
-                        checkoutModule(params.moduleName, moduleOptions)
+                        def moduleName = selectedModules[i]
+                        def moduleGitUrl = moduleOptions.get(moduleName)
+                        checkoutModule(moduleName, moduleOptions)
                     }
 
                     // if (params.moduleName == moduleNames[moduleNames.size()-1]) {
