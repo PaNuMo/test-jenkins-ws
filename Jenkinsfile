@@ -63,7 +63,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
 
 properties([
     parameters([
-        extendedChoiceParam
+        extendedChoiceParam,
         choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
         booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
         choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),        
