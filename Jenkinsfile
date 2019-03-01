@@ -3,6 +3,9 @@
 def moduleOptions = {}
 def moduleNames = []
 
+def serverOptions = {}
+def serverNames = []
+
 node {
     checkout([
         $class: 'GitSCM',
@@ -11,8 +14,12 @@ node {
     ])
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
+    
     moduleOptions = optionsJSON.get("moduleOptions")
     moduleNames.addAll(moduleOptions.keySet())
+
+    serverOptions = optionsJSON.get("environments")
+    serverNames.addAll(serverOptions.keySet())
 }
 
 pipeline {
@@ -22,9 +29,10 @@ pipeline {
         jdk 'Jenkins_Java'
     }
 
-    parameters {
+    parameters {        
         choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName')
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
+        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')
     }
 
     stages {
@@ -59,7 +67,10 @@ pipeline {
             }
 
             steps {
-                sh 'cp -a bundles/osgi/modules/* /home/pnunez/Documents/Liferay/DEV-liferay-ce-portal-7.1.2-ga3/osgi/modules/'
+                script{
+                    println("************** " + serverOptions.get(serverName))
+                }
+                sh 'cp -a bundles/osgi/modules/* ${serverOptions.get(serverName)}'
             }
         }
 
