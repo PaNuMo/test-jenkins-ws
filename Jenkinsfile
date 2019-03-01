@@ -1,7 +1,5 @@
 #!groovy​
 
-
-
 import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
 def moduleOptions = {}
@@ -28,37 +26,15 @@ node {
 }
 
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
-            "moduleNameTest", 
-            "PT_CHECKBOX", 
-            moduleNames.join(","), 
-            "",
-            "", 
-            "",
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            false,
-            false, 
-            10, 
-            "Which module(s) build/deploy?", 
-            ",");
+    "selectedModules", 
+    "PT_CHECKBOX", 
+    moduleNames.join(","), 
+    "","","","","","","","","","","","","", 
+    "","","","","","","","","","",false,false, 
+    10, 
+    "Which module(s) build/deploy?", 
+    ","
+);
 
 
 properties([
@@ -83,7 +59,7 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    println("*&&*&* " + params)
+                    println("*&&*&* " + params.selectedModules.split[","])
                     if (params.moduleName == moduleNames[moduleNames.size()-1]) {
                         for (int i = 0; i < moduleNames.size()-1; i++) {
                             checkoutModule(moduleNames[i], moduleOptions)
