@@ -69,8 +69,9 @@ pipeline {
             steps {
                 script{
                     println("************** " + serverOptions.get(params.serverName))
+                    def testPath = serverOptions.get(params.serverName)
                 }
-                sh 'cp -a bundles/osgi/modules/* ${serverOptions.get(params.serverName)}'
+                sh 'cp -a bundles/osgi/modules/* ${testPath}'
             }
         }
 
