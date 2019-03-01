@@ -26,14 +26,14 @@ node {
 }
 
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
-    "selectedModules", 
-    "PT_CHECKBOX", 
-    moduleNames.join(","), 
+    "selectedModules", // Name
+    "PT_CHECKBOX", // Choice mode
+    moduleNames.join(","), // Items
     "","","","","","","","","","","","","", 
     "","","","","","","","","","",false,false, 
-    10, 
-    "Which module(s) build/deploy?", 
-    ","
+    10, // Number of items to display
+    "Which module(s) build/deploy?", // Description
+    "," // Delimiter
 );
 
 
