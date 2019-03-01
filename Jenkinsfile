@@ -39,9 +39,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             ",");
 
 params << extendedChoiceParam
-props << parameters(params)
 
-properties(props)
 
 def moduleOptions = {}
 def moduleNames = []
