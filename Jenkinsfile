@@ -70,8 +70,9 @@ pipeline {
             steps {
                 script{
                     serverDeployPath = serverOptions.get(params.serverName)
+                    println(serverDeployPath)
                 }
-                sh 'cp -a bundles/osgi/modules/* ${serverDeployPath}'
+                sh 'cp -a bundles/osgi/modules/* $serverDeployPath'
             }
         }
 
