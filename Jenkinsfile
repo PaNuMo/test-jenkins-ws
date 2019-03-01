@@ -4,12 +4,14 @@
 
 import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
-List params = []
+List params = [choice(choices: moduleNames, description: 'Which module build/deploy?', name: 'moduleName'),
+        booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
+        choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName')]
 List props = []
 def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name", 
-            "PT_MULTI_SELECT", 
+            "PT_CHECKBOX", 
             "blue,green,yellow,blue", 
-            "project name",
+            "PipelineProject",
             "", 
             "",
             "", 
@@ -35,7 +37,7 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition("name",
             false,
             false, 
             3, 
-            "multiselect", 
+            "select something", 
             ",");
 
 params << extendedChoiceParam
