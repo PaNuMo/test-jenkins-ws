@@ -25,7 +25,7 @@ node {
     serverNames.addAll(serverOptions.keySet())
 }
 
-def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
+def selectedModulesParam = new ExtendedChoiceParameterDefinition(
     "selectedModules", // Name
     "PT_CHECKBOX", // Choice type
     moduleNames.join(","), // Items
@@ -36,10 +36,24 @@ def extendedChoiceParam = new ExtendedChoiceParameterDefinition(
     "," // Delimiter
 );
 
+def selectCheckoutParam = new ExtendedChoiceParameterDefinition(
+    "selectedCheckout", // Name
+    "PT_RADIO", // Choice type
+    "Git,Artifactory", // Items
+    "","","","","","","","","","","","","", 
+    "","","","","","","","","","",false,false, 
+    2, // Number of visible items
+    "From where checkout the modules?", // Description
+    "," // Delimiter
+);
+
+
+
 
 properties([
     parameters([
-        extendedChoiceParam,
+        selectedCheckout,
+        selectedModulesParam,
         booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
         choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),        
     ])
