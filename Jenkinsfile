@@ -73,6 +73,8 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
+                    println(params.selectedCheckout)
+
                     def selectedModules = params.selectedModules.split(",")
                     if (selectedModules[0] == moduleNames[0]) {
                         for (int i = 1; i < moduleNames.size(); i++) {
