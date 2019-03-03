@@ -40,8 +40,9 @@ def selectCheckoutParam = new ExtendedChoiceParameterDefinition(
     "selectedCheckout", // Name
     "PT_RADIO", // Choice type
     "Git,Artifactory", // Items
-    "","","","","","","","","","","","","", 
-    "","","","","","","","","","",false,false, 
+    "","","","","","","",
+    "Git", // Default Value
+    "","","","","","","","","","","","","","","",false,false, 
     2, // Number of visible items
     "From where checkout the modules?", // Description
     "," // Delimiter
