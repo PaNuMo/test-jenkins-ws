@@ -52,7 +52,7 @@ def selectCheckoutParam = new ExtendedChoiceParameterDefinition(
 
 properties([
     parameters([
-        selectedCheckout,
+        selectCheckoutParam,
         selectedModulesParam,
         booleanParam(defaultValue: true, description: '', name: 'deployToServer'),
         choice(choices: serverNames, description: 'To which server deploy?', name: 'serverName'),        
