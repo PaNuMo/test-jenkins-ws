@@ -73,26 +73,38 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
-                    println(params.selectedCheckout)
-
-                    def selectedModules = params.selectedModules.split(",")
-                    if (selectedModules[0] == moduleNames[0]) {
-                        for (int i = 1; i < moduleNames.size(); i++) {
-                            checkoutModule(moduleNames[i], moduleOptions)
+                    if(params.selectedCheckout == "Git"){
+                        // Checkout code from Git
+                        println("Checkout source code form Git")
+                        def selectedModules = params.selectedModules.split(",")
+                        if (selectedModules[0] == moduleNames[0]) {
+                            for (int i = 1; i < moduleNames.size(); i++) {
+                                checkoutModule(moduleNames[i], moduleOptions)
+                            }
+                        }
+                        else {
+                            for (int i = 0; i < selectedModules.size(); i++) {
+                                def moduleName = selectedModules[i]
+                                def moduleGitUrl = moduleOptions.get(moduleName)
+                                checkoutModule(moduleName, moduleOptions)
+                            }
                         }
                     }
-                    else {
-                        for (int i = 0; i < selectedModules.size(); i++) {
-                            def moduleName = selectedModules[i]
-                            def moduleGitUrl = moduleOptions.get(moduleName)
-                            checkoutModule(moduleName, moduleOptions)
-                        }
+                    else{
+                        // Get jars from Artifactory
+                        println("Download jars from Artifactory")
+                        println("which version???")
                     }
                 }
 	        }
 	    }
 
         stage('Build') {
+            when {
+                expression {
+                    return params.selectedCheckout == "Git"
+                }
+            }
             steps {
                 sh './gradlew clean deploy'
             }
@@ -101,7 +113,7 @@ pipeline {
         stage('Deploy') {
             when {
                 expression {
-                    return params.deployToServer;
+                    return params.deployToServer
                 }
             }
 
