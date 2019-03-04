@@ -12,13 +12,10 @@ def serverDeployPath = ''
 def tagVersion = ''
 
 node {
-    def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
-    println("SCM*********** " + scmUrl)
-
     checkout([
         $class: 'GitSCM',
         branches: [[name: '*/master']],
-        userRemoteConfigs: [[url: 'https://github.com/PaNuMo/test-jenkins-ws']]
+        userRemoteConfigs: [[url: scm.getUserRemoteConfigs()[0].getUrl()]]
     ])
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
