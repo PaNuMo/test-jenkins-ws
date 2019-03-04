@@ -93,27 +93,41 @@ pipeline {
 
 
 
+                    def userInputMessage = (selectedModules[0] == moduleNames[0]) ? "Deploying all modules" : "Deploying modules " + selectedModules
+                    
+                    // def userInput
+                    // try {
+                    //     userInput = input(
+                    //         id: 'proceedInput', 
+                    //         message: userInputMessage, 
+                    //         parameters: [
+                    //             [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
+                    //         ]
+                    //     )
+                    // } catch(err) { // input false
+                    //     userInput = false
+                    //     echo "Aborted by: "
+                    // }
 
-                    def userInput
-                    try {
-                        userInput = input(
-                            id: 'Proceed1', message: 'Was this successful?', parameters: [
-                            [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
-                            ])
-                    } catch(err) { // input false
-                        userInput = false
-                        echo "Aborted by: "
-                    }
+                    // node {
+                    //     if (userInput == true) {
+                    //         // do something
+                    //         echo "this was successful"
+                    //     } else {
+                    //         // do something else
+                    //         echo "this was not successful"
+                    //         currentBuild.result = 'FAILURE'
+                    //     } 
+                    // }
 
-                    node {
-                        if (userInput == true) {
-                            // do something
-                            echo "this was successful"
-                        } else {
-                            // do something else
-                            echo "this was not successful"
-                            currentBuild.result = 'FAILURE'
-                        } 
+                    timeout(time:45, unit:'SECONDS') {
+                    userInput = input(
+                            id: 'proceedInput', 
+                            message: userInputMessage, 
+                            parameters: [
+                                [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
+                            ]
+                        )
                     }
 
                     
