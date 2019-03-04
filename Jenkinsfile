@@ -108,8 +108,10 @@ pipeline {
                 }
             }
             steps {
+                script{
                 def currentTag = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
                 println("TAG: " + currentTag)
+                }
                 sh './gradlew clean deploy'
             }
         }
