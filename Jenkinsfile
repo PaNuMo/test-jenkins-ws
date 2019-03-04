@@ -44,9 +44,7 @@ properties([
         selectedModulesParam,
         choice(choices: serverNames, description: 'To which environment deploy?', name: 'environment'),  
         booleanParam(defaultValue: true, description: '', name: 'deployLatestTag'),
-        string(defaultValue: '', description: 'Which version use?', name: 'artifactoryVersion'),
-        booleanParam(defaultValue: true, description: '', name: 'deployToServer')
-              
+        string(defaultValue: '', description: 'Which version use?', name: 'artifactoryVersion')             
     ])
 ])
 
@@ -95,11 +93,6 @@ pipeline {
 	    }
 
         stage('Build') {
-            when {
-                expression {
-                    return params.selectedCheckout == "Git"
-                }
-            }
             steps {
                 sh './gradlew clean deploy'
             }
