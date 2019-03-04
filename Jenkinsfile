@@ -84,7 +84,7 @@ pipeline {
                         if (selectedModules[0] == moduleNames[0]) {
                             // Checkout all
                             for (int i = 1; i < moduleNames.size(); i++) {
-                                checkoutModule(moduleNames[i], moduleOptions)
+                                tagVersion = checkoutModule(moduleNames[i], moduleOptions)
                             }
                         }
                         else {
@@ -92,7 +92,7 @@ pipeline {
                             for (int i = 0; i < selectedModules.size(); i++) {
                                 def moduleName = selectedModules[i]
                                 def moduleGitUrl = moduleOptions.get(moduleName)
-                                checkoutModule(moduleName, moduleOptions)
+                                tagVersion = checkoutModule(moduleName, moduleOptions)
                             }
                         }
                     }
@@ -102,6 +102,8 @@ pipeline {
                         println("which version???")
 
                     }
+
+                    println("FINAL TAG VERSION " + tagVersion)
                 }
 	        }
 	    }
