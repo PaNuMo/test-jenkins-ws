@@ -104,8 +104,9 @@ pipeline {
                     def serverNodes = serverOptions.get(params.environment)
                     for(int i = 0; i < serverNodes.size(); i++){
                         def node = serverNodes.get(i)
+                        def nodePath = node.get("path")
                         println("Deploying to: " + node.get("name"))
-                        sh "cp -a bundles/osgi/modules/* $node.get('path')"
+                        sh "cp -a bundles/osgi/modules/* $nodePath"
                     }
                 }
                 
