@@ -153,7 +153,7 @@ pipeline {
     }
 }
 
-String checkoutModule(moduleName, moduleOptions, tagVersion) {
+String checkoutModule(moduleName, moduleOptions) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     def currentTag = ''
     if(moduleGitUrl != null){
