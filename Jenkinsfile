@@ -169,12 +169,11 @@ String checkoutModule(moduleName, moduleOptions, tagVersion) {
         ])
 
         if(tagVersion == ''){
-            println('*** Getting TAG version')
             currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
-            println("currTAG: " + currentTag)
+            println("Tag found: " + currentTag)
         }
         else {
-            println("TAG ALREADY EXISTS.... " + tagVersion)
+            println("Tag version already exists: " + tagVersion)
         }
     }
     else {
