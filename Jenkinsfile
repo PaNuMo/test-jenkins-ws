@@ -63,63 +63,28 @@ pipeline {
             steps {
                 script {
                     
-                    if(params.selectedCheckout == "Git"){
-                        // Checkout code from Git
-                        println("Checkout source code from Git")
-                        def selectedModules = params.selectedModules.split(",")
-                        if (selectedModules[0] == moduleNames[0]) {
-                            // Checkout all
-                            for (int i = 1; i < moduleNames.size(); i++) {
-                                tagVersion = checkoutModule(moduleNames[i], moduleOptions, tagVersion)
-                            }
-                        }
-                        else {
-                            // Checkout selected modules
-                            for (int i = 0; i < selectedModules.size(); i++) {
-                                def moduleName = selectedModules[i]
-                                def moduleGitUrl = moduleOptions.get(moduleName)
-                                tagVersion = checkoutModule(moduleName, moduleOptions, tagVersion)
-                            }
+                    // Checkout code from Git
+                    println("Checkout source code from Git")
+                    def selectedModules = params.selectedModules.split(",")
+                    if (selectedModules[0] == moduleNames[0]) {
+                        // Checkout all
+                        for (int i = 1; i < moduleNames.size(); i++) {
+                            tagVersion = checkoutModule(moduleNames[i], moduleOptions, tagVersion)
                         }
                     }
-                    else{
-                        // Get jars from Artifactory
-                        println("Download jars from Artifactory")
-                        println("which version???")
-
+                    else {
+                        // Checkout selected modules
+                        for (int i = 0; i < selectedModules.size(); i++) {
+                            def moduleName = selectedModules[i]
+                            def moduleGitUrl = moduleOptions.get(moduleName)
+                            tagVersion = checkoutModule(moduleName, moduleOptions, tagVersion)
+                        }
                     }
 
                     println("FINAL TAG VERSION " + tagVersion)
 
-
-
-                    def userInputMessage = (selectedModules[0] == moduleNames[0]) ? "Deploying all modules" : "Deploying modules " + selectedModules
-                    userInputMessage += " to " + params.environment + ". Version " + tagVersion
-
-                    // def userInput
-                    // try {
-                    //     userInput = input(
-                    //         id: 'proceedInput', 
-                    //         message: userInputMessage, 
-                    //         parameters: [
-                    //             [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
-                    //         ]
-                    //     )
-                    // } catch(err) { // input false
-                    //     userInput = false
-                    //     echo "Aborted by: "
-                    // }
-
-                    // node {
-                    //     if (userInput == true) {
-                    //         // do something
-                    //         echo "this was successful"
-                    //     } else {
-                    //         // do something else
-                    //         echo "this was not successful"
-                    //         currentBuild.result = 'FAILURE'
-                    //     } 
-                    // }
+                    def userInputMessage = (selectedModules[0] == moduleNames[0]) ? "Deploying all modules" : "Deploying " + selectedModules
+                    userInputMessage += " to " + params.environment + ". Version " + tagVersion + "."
 
                     timeout(time:45, unit:'SECONDS') {
                         userInput = input(
