@@ -31,8 +31,9 @@ def selectedModulesParam = new ExtendedChoiceParameterDefinition(
     "selectedModules", // Name
     "PT_CHECKBOX", // Choice type
     moduleNames.join(","), // Items
-    "","","","","","","","","","","","","", 
-    "","","","","","","","","","",false,false, 
+    "","","","","","","",
+    "All modules", // Default Value
+    "","","","","","","","","","","","","","","",false,false, 
     10, // Number of visible items
     "Which module(s) build/deploy?", // Description
     "," // Delimiter
@@ -64,7 +65,6 @@ pipeline {
                 script {
                     
                     // Checkout code from Git
-                    println("Checkout source code from Git")
                     def selectedModules = params.selectedModules.split(",")
                     if (selectedModules[0] == moduleNames[0]) {
                         // Checkout all
@@ -81,19 +81,15 @@ pipeline {
                         }
                     }
 
-                    println("FINAL TAG VERSION " + tagVersion)
-
                     def userInputMessage = (selectedModules[0] == moduleNames[0]) ? "Deploying all modules" : "Deploying " + selectedModules
                     userInputMessage += " to " + params.environment + ". Version " + tagVersion + "."
 
-                    timeout(time:45, unit:'SECONDS') {
+                    timeout(time:1, unit:'MINUTES') {
                         userInput = input(
                             id: 'proceedInput', 
                             message: userInputMessage
                         )
-                    }
-
-                    
+                    }                   
                 }
 	        }
 	    }
