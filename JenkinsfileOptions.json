@@ -1,10 +1,20 @@
 {
     "environments": {
-        "DEV" : "/home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/osgi/modules/",
-        "QA" : "/home/pnunez/Documents/Liferay/QA-liferay-ce-portal-7.1.2-ga3/osgi/modules/"
+        "SYS" : [
+            {   
+                "name" : "node1",
+                "path" : "/home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/osgi/modules/"
+            },
+            {   
+                "name" : "node2",
+                "path" : "/home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/osgi/modules/"
+            }        
+        ],
+        "UAT" : "/home/pnunez/Documents/Liferay/QA-liferay-ce-portal-7.1.2-ga3/osgi/modules/",
+        "LIVE" : "/home/pnunez/Documents/Liferay/QA-liferay-ce-portal-7.1.2-ga3/osgi/modules/"
     },
     "moduleOptions": {
-        "all" : "all",
+        "All" : "All",
         "module1" : "https://github.com/PaNuMo/test-module-one",
         "module2" : "https://github.com/PaNuMo/test-module-two",
         "module3" : "https://github.com/PaNuMo/test-module-three"      
