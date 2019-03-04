@@ -41,7 +41,7 @@ def selectedModulesParam = new ExtendedChoiceParameterDefinition(
 properties([
     parameters([
         selectedModulesParam,
-        choice(choices: serverNames, description: 'To which environment deploy?', name: 'serverName'),  
+        choice(choices: serverNames, description: 'To which environment deploy?', name: 'environment'),  
         booleanParam(defaultValue: true, description: '', name: 'deployLatestTag'),
         string(defaultValue: '', description: 'Which version use?', name: 'artifactoryVersion'),
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
@@ -90,6 +90,33 @@ pipeline {
                     }
 
                     println("FINAL TAG VERSION " + tagVersion)
+
+
+
+
+                    def userInput
+                    try {
+                        userInput = input(
+                            id: 'Proceed1', message: 'Was this successful?', parameters: [
+                            [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
+                            ])
+                    } catch(err) { // input false
+                        userInput = false
+                        echo "Aborted by: "
+                    }
+
+                    node {
+                        if (userInput == true) {
+                            // do something
+                            echo "this was successful"
+                        } else {
+                            // do something else
+                            echo "this was not successful"
+                            currentBuild.result = 'FAILURE'
+                        } 
+                    }
+
+                    
                 }
 	        }
 	    }
@@ -125,7 +152,7 @@ pipeline {
 
             steps {
                 script{
-                    serverDeployPath = serverOptions.get(params.serverName)
+                    serverDeployPath = serverOptions.get(params.environment)
                 }
                 sh "cp -a bundles/osgi/modules/* $serverDeployPath"
             }
