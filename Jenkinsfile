@@ -73,6 +73,7 @@ pipeline {
         stage('Checkout Module(s)') {
             steps {
                 script {
+                    
                     if(params.selectedCheckout == "Git"){
                         // Checkout code from Git
                         println("Checkout source code form Git")
@@ -94,6 +95,7 @@ pipeline {
                         // Get jars from Artifactory
                         println("Download jars from Artifactory")
                         println("which version???")
+
                     }
                 }
 	        }
@@ -106,6 +108,8 @@ pipeline {
                 }
             }
             steps {
+                def currentTag = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
+                println("TAG: " + currentTag)
                 sh './gradlew clean deploy'
             }
         }
