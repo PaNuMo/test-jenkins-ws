@@ -151,7 +151,7 @@ pipeline {
     }
 }
 
-void checkoutModule(moduleName, moduleOptions, tagVersion) {
+void checkoutModule(moduleName, moduleOptions) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     if(moduleGitUrl != null){
         def splittedUrl = moduleGitUrl.split('/')                    
