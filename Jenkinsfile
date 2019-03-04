@@ -9,6 +9,8 @@ def serverOptions = {}
 def serverNames = []
 def serverDeployPath = ''
 
+def tagVersion = ''
+
 node {
     checkout([
         $class: 'GitSCM',
@@ -122,10 +124,6 @@ pipeline {
                 }
             }
             steps {
-                script{
-                    def currentTag = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
-                    println("TAG: " + currentTag)
-                }
                 sh './gradlew clean deploy'
             }
         }
@@ -145,11 +143,11 @@ pipeline {
             }
         }
 
-        // stage('Workspace Cleanup') {
-        //     steps {
-        //         deleteDir()
-        //     }
-        // }
+        stage('Workspace Cleanup') {
+            steps {
+                deleteDir()
+            }
+        }
     }
 }
 
@@ -166,6 +164,14 @@ void checkoutModule(moduleName, moduleOptions) {
             extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
             userRemoteConfigs: [[url: moduleGitUrl]]
         ])
+
+        if(tagVersion == ''){
+            println('*** Getting TAG version')
+            dir(modulePath)(
+                def currentTag = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
+                println("TAG: " + currentTag)
+            )
+        }
     }
     else {
         println("ERROR: Couldn't find a Git URL for " + moduleName)
