@@ -32,7 +32,7 @@ def selectedModulesParam = new ExtendedChoiceParameterDefinition(
     "PT_CHECKBOX", // Choice type
     moduleNames.join(","), // Items
     "","","","","","","",
-    "All modules", // Default Value
+    "All", // Default Value
     "","","","","","","","","","","","","","","",false,false, 
     10, // Number of visible items
     "Which module(s) build/deploy?", // Description
