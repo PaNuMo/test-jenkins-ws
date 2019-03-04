@@ -98,15 +98,19 @@ pipeline {
             }
         }
 
-        stage('Deploy') {           
+        stage('Deploy') {   
+            body{        
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
 
-                println(env.USERNAME)
-                println(env.PASSWORD)
+                
                 
                 script{
+
+                    println(env.USERNAME)
+                    println(env.PASSWORD)
+
                     def serverNodes = serverOptions.get(params.environment)
                     for(int i = 0; i < serverNodes.size(); i++){
                         def node = serverNodes.get(i)
@@ -118,6 +122,7 @@ pipeline {
                     }
                 }
                 
+            }
             }
         }
 
