@@ -43,7 +43,7 @@ properties([
         selectedModulesParam,
         choice(choices: serverNames, description: 'To which environment deploy?', name: 'serverName'),  
         booleanParam(defaultValue: true, description: '', name: 'deployLatestTag'),
-        string(defaultValue: '', description: 'Which version use?', name: 'artifactoryVersion')
+        string(defaultValue: '', description: 'Which version use?', name: 'artifactoryVersion'),
         booleanParam(defaultValue: true, description: '', name: 'deployToServer')
               
     ])
