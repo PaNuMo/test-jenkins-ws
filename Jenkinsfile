@@ -103,13 +103,10 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     script{
-                        sh 'echo $USERNAME'
-                        echo "password is $PASSWORD"
-
                         def serverNodes = serverOptions.get(params.environment)
                         for(int i = 0; i < serverNodes.size(); i++){
                             def node = serverNodes.get(i)
-                            def nodePath = node.get("path")
+                            def nodePath = node.get("deployPath")
                             def nodeServer = node.get("server")
                             println("Deploying to: " + nodeServer)
                             
