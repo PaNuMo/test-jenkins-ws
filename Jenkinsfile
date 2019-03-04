@@ -98,9 +98,9 @@ pipeline {
             }
         }
 
-        stage('Deploy') {   
-            body{        
+        stage('Deploy') {           
             steps {
+                body{
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
 
@@ -121,8 +121,8 @@ pipeline {
                         sh "cp -a bundles/osgi/modules/* $nodePath"
                     }
                 }
+                }
                 
-            }
             }
         }
 
