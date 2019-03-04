@@ -84,7 +84,7 @@ pipeline {
                         if (selectedModules[0] == moduleNames[0]) {
                             // Checkout all
                             for (int i = 1; i < moduleNames.size(); i++) {
-                                checkoutModule(moduleNames[i], moduleOptions)
+                                checkoutModule(moduleNames[i], moduleOptions, tagVersion)
                             }
                         }
                         else {
@@ -92,7 +92,7 @@ pipeline {
                             for (int i = 0; i < selectedModules.size(); i++) {
                                 def moduleName = selectedModules[i]
                                 def moduleGitUrl = moduleOptions.get(moduleName)
-                                checkoutModule(moduleName, moduleOptions)
+                                checkoutModule(moduleName, moduleOptions, tagVersion)
                             }
                         }
                     }
@@ -151,7 +151,7 @@ pipeline {
     }
 }
 
-void checkoutModule(moduleName, moduleOptions) {
+void checkoutModule(moduleName, moduleOptions, tagVersion) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     if(moduleGitUrl != null){
         def splittedUrl = moduleGitUrl.split('/')                    
