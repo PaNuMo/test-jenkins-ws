@@ -100,7 +100,6 @@ pipeline {
 
         stage('Deploy') {           
             steps {
-
                 withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     script{
