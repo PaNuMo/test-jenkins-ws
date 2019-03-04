@@ -94,7 +94,8 @@ pipeline {
 
 
                     def userInputMessage = (selectedModules[0] == moduleNames[0]) ? "Deploying all modules" : "Deploying modules " + selectedModules
-                    
+                    userInputMessage += " to " + params.environment + ". Version " + tagVersion
+
                     // def userInput
                     // try {
                     //     userInput = input(
@@ -121,12 +122,9 @@ pipeline {
                     // }
 
                     timeout(time:45, unit:'SECONDS') {
-                    userInput = input(
+                        userInput = input(
                             id: 'proceedInput', 
-                            message: userInputMessage, 
-                            parameters: [
-                                [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
-                            ]
+                            message: userInputMessage
                         )
                     }
 
