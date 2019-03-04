@@ -84,7 +84,7 @@ pipeline {
                         if (selectedModules[0] == moduleNames[0]) {
                             // Checkout all
                             for (int i = 1; i < moduleNames.size(); i++) {
-                                tagVersion = checkoutModule(moduleNames[i], moduleOptions)
+                                tagVersion = checkoutModule(moduleNames[i], moduleOptions, tagVersion)
                             }
                         }
                         else {
@@ -92,7 +92,7 @@ pipeline {
                             for (int i = 0; i < selectedModules.size(); i++) {
                                 def moduleName = selectedModules[i]
                                 def moduleGitUrl = moduleOptions.get(moduleName)
-                                tagVersion = checkoutModule(moduleName, moduleOptions)
+                                tagVersion = checkoutModule(moduleName, moduleOptions, tagVersion)
                             }
                         }
                     }
@@ -153,7 +153,7 @@ pipeline {
     }
 }
 
-String checkoutModule(moduleName, moduleOptions) {
+String checkoutModule(moduleName, moduleOptions, tagVersion) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     def currentTag = ''
     if(moduleGitUrl != null){
