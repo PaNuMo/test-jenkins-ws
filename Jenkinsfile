@@ -151,8 +151,9 @@ pipeline {
     }
 }
 
-void checkoutModule(moduleName, moduleOptions) {
+String checkoutModule(moduleName, moduleOptions, tagVersion) {
     def moduleGitUrl = moduleOptions.get(moduleName)
+    def currentTag = ''
     if(moduleGitUrl != null){
         def splittedUrl = moduleGitUrl.split('/')                    
         def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
@@ -167,8 +168,8 @@ void checkoutModule(moduleName, moduleOptions) {
 
         if(tagVersion == ''){
             println('*** Getting TAG version')
-            tagVersion = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
-            println("TAG: " + tagVersion)
+            currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
+            println("currTAG: " + currentTag)
         }
         else {
             println("TAG ALREADY EXISTS.... " + tagVersion)
@@ -177,4 +178,6 @@ void checkoutModule(moduleName, moduleOptions) {
     else {
         println("ERROR: Couldn't find a Git URL for " + moduleName)
     }
+
+    return tagVersion != '' ? tagVersion : currentTag
 }
