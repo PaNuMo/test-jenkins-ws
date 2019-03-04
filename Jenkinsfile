@@ -13,8 +13,8 @@ def tagVersion = ''
 
 node {
     //def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
-    echo GIT_URL
-    echo '$GIT_URL'
+    //echo GIT_URL
+    echo "$GIT_URL"
 
     checkout([
         $class: 'GitSCM',
