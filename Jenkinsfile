@@ -167,12 +167,9 @@ void checkoutModule(moduleName, moduleOptions, tagVersion) {
 
         if(tagVersion == ''){
             println('*** Getting TAG version')
-            node{
-            dir(modulePath)(
+                println(sh "git tag --sort version:refname | tail -1")
                 def currentTag = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
                 println("TAG: " + currentTag)
-            )
-            }
         }
     }
     else {
