@@ -171,7 +171,7 @@ void checkoutModule(moduleName, moduleOptions, tagVersion) {
             println("TAG: " + tagVersion)
         }
         else {
-            println("TAG ALREADY EXISTS")
+            println("TAG ALREADY EXISTS.... " + tagVersion)
         }
     }
     else {
