@@ -110,10 +110,12 @@ pipeline {
                         for(int i = 0; i < serverNodes.size(); i++){
                             def node = serverNodes.get(i)
                             def nodePath = node.get("path")
-                            println("Deploying to: " + node.get("name"))
-
+                            def nodeServer = node.get("server")
+                            println("Deploying to: " + nodeServer)
                             
-                            sh "cp -a bundles/osgi/modules/* $nodePath"
+                            //sh "cp -a bundles/osgi/modules/* $nodePath"
+
+                            sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
                         }
                     } 
                 }  
