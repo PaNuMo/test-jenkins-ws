@@ -168,8 +168,8 @@ void checkoutModule(moduleName, moduleOptions, tagVersion) {
         if(tagVersion == ''){
             println('*** Getting TAG version')
                 sh "cd $modulePath"
-                sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
-                def currentTag = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
+                sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
+                def currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
                 println("TAG: " + currentTag)
         }
     }
