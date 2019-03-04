@@ -104,8 +104,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     script{
-                        println(env.USERNAME)
-                        println(env.PASSWORD)
+                        println($USERNAME)
+                        println($PASSWORD)
 
                         def serverNodes = serverOptions.get(params.environment)
                         for(int i = 0; i < serverNodes.size(); i++){
