@@ -12,6 +12,9 @@ def serverDeployPath = ''
 def tagVersion = ''
 
 node {
+    def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+    println(scmUrl)
+    
     checkout([
         $class: 'GitSCM',
         branches: [[name: '*/master']],
