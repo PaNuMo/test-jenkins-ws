@@ -13,6 +13,7 @@ def tagVersion = ''
 
 node {
     def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+    println("SCM*********** " + scmUrl)
 
     checkout([
         $class: 'GitSCM',
