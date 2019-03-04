@@ -98,29 +98,17 @@ pipeline {
             }
         }
 
-        stage('Upload to Artifactory') {
-            when {
-                expression {
-                    return params.uploadToArtifactory
-                }
-            }
-            steps {
-                sh './gradlew clean deploy'
-            }
-        }
-
         stage('Deploy') {
-            when {
-                expression {
-                    return params.deployToServer
-                }
-            }
-
             steps {
                 script{
-                    serverDeployPath = serverOptions.get(params.environment)
+                    def serverNodes = serverOptions.get(params.environment)
+                    for(int i = 0; i < serverNodes.length; i++){
+                        def node = serverNodes[i]
+                        println("Deploying to: " + node.name)
+                        sh "cp -a bundles/osgi/modules/* $node.path"
+                    }
                 }
-                sh "cp -a bundles/osgi/modules/* $serverDeployPath"
+                
             }
         }
 
