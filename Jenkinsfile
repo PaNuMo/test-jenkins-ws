@@ -100,29 +100,24 @@ pipeline {
 
         stage('Deploy') {           
             steps {
-                body{
+
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
-                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]){
+                    script{
+                        println(env.USERNAME)
+                        println(env.PASSWORD)
 
-                
-                
-                script{
+                        def serverNodes = serverOptions.get(params.environment)
+                        for(int i = 0; i < serverNodes.size(); i++){
+                            def node = serverNodes.get(i)
+                            def nodePath = node.get("path")
+                            println("Deploying to: " + node.get("name"))
 
-                    println(env.USERNAME)
-                    println(env.PASSWORD)
-
-                    def serverNodes = serverOptions.get(params.environment)
-                    for(int i = 0; i < serverNodes.size(); i++){
-                        def node = serverNodes.get(i)
-                        def nodePath = node.get("path")
-                        println("Deploying to: " + node.get("name"))
-
-                        
-                        sh "cp -a bundles/osgi/modules/* $nodePath"
-                    }
-                }
-                }
-                
+                            
+                            sh "cp -a bundles/osgi/modules/* $nodePath"
+                        }
+                    } 
+                }  
             }
         }
 
