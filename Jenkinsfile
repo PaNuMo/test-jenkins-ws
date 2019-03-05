@@ -108,7 +108,7 @@ pipeline {
                             def node = serverNodes.get(i)
                             def nodePath = node.get("deployPath")
                             def nodeServer = node.get("server")
-                            println("Deploying to: " + nodeServer)
+                            echo "Deploying to: $nodeServer"
                             
                             //sh "cp -a bundles/osgi/modules/* $nodePath"
 
