@@ -179,7 +179,6 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
 
         if(isTagVersionEmpty){
             currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
-            currentTag = sh(returnStdout: true, script: "svn log $checkoutUrl --limit 1").trim()
 
             echo "Tag found: $currentTag"
         }
