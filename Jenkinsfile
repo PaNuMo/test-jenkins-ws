@@ -80,6 +80,18 @@ pipeline {
                     // Checkout code from VCS
                     def selectedModules = params.selectedModules.split(",")
                     def allModulesSelected = selectedModules[0] == ALL_MODULES
+
+                    // Define message to display in the summary for user acceptance
+                    def userInputMessage = allModulesSelected ? "Deploying all modules" : "Deploying $selectedModules"
+                    userInputMessage += " to ${params.environment}. Version ${tagVersion}."
+
+                    // Wait for 1 minute for user acceptance
+                    timeout(time:1, unit:'MINUTES') {
+                        userInput = input(
+                            id: 'proceedInput', 
+                            message: userInputMessage
+                        )
+                    }
                     
                     // If "All" checkbox was selected
                     if (allModulesSelected) {
@@ -95,19 +107,7 @@ pipeline {
                             def moduleGitUrl = moduleOptions.get(moduleName)
                             tagVersion = checkoutModule(moduleName, moduleOptions, tagVersion)
                         }
-                    }
-
-                    // Define message to display in the summary for user acceptance
-                    def userInputMessage = allModulesSelected ? "Deploying all modules" : "Deploying $selectedModules"
-                    userInputMessage += " to ${params.environment}. Version ${tagVersion}."
-
-                    // Wait for 1 minute for user acceptance
-                    timeout(time:1, unit:'MINUTES') {
-                        userInput = input(
-                            id: 'proceedInput', 
-                            message: userInputMessage
-                        )
-                    }                   
+                    }                    
                 }
 	        }
 	    }
