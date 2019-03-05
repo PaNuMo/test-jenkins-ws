@@ -152,7 +152,7 @@ pipeline {
                             }
                         }
                         else {
-                            // Loop throuhg selected modules
+                            // Loop through selected modules
                             for(moduleName in selectedModules){
                                 sh "cp -a modules/${moduleName}/build/libs/* $nodePath"
                             }
