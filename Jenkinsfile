@@ -117,8 +117,7 @@ pipeline {
                     }
                     else {
                         // Checkout selected modules
-                        for (int i = 0; i < selectedModules.size(); i++) {
-                            def moduleName = selectedModules[i]
+                        for(moduleName in selectedModules) {
                             def moduleGitUrl = moduleOptions.get(moduleName)
                             checkoutModule(moduleName, moduleOptions, params.deployLatestTag, params.artifactoryVersion)
                         }
@@ -147,16 +146,15 @@ pipeline {
 
                         // If "All" checkbox was selected
                         if (allModulesSelected) {
-                            println("**** Deploy all")
                             // Loop through all the modules, skip the first one since that's the 'All' option
                             for (int x = 1; x < moduleNames.size(); x++) {                               
-                                sh "ls modules/${moduleNames[x]}/build/libs/"
+                                sh "cp -a modules/${moduleNames[x]}/build/libs/* $nodePath"
                             }
                         }
                         else {
                             // Loop throuhg selected modules
                             for(moduleName in selectedModules){
-                                sh "ls modules/${moduleName}/build/libs/"
+                                sh "cp -a modules/${moduleName}/build/libs/* $nodePath"
                             }
                         } 
                     }                
