@@ -170,13 +170,6 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
             ]]
         ])
 
-        // checkout([
-        //     $class: 'GitSCM',
-        //     branches: [[name: '*/master']],
-        //     extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-        //     userRemoteConfigs: [[url: moduleGitUrl]]
-        // ])
-
         if(isTagVersionEmpty){
             currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
 
