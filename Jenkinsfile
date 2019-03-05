@@ -155,8 +155,8 @@ pipeline {
                         }
                         else {
                             // Loop throuhg selected modules
-                            for (int x = 0; x < selectedModules.size(); x++) {
-                                sh "ls modules/${selectedModules[i]}/build/libs/"
+                            for(moduleName in selectedModules){
+                                sh "ls modules/${moduleName}/build/libs/"
                             }
                         } 
                     }                
