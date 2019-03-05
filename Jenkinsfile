@@ -149,13 +149,13 @@ pipeline {
                         if (allModulesSelected) {
                             println("**** Deploy all")
                             // Loop through all the modules, skip the first one since that's the 'All' option
-                            for (int i = 1; i < moduleNames.size(); i++) {                               
+                            for (int x = 1; x < moduleNames.size(); x++) {                               
                                 sh "ls modules/${moduleNames[i]}/build/libs/"
                             }
                         }
                         else {
                             // Loop throuhg selected modules
-                            for (int i = 0; i < selectedModules.size(); i++) {
+                            for (int x = 0; x < selectedModules.size(); x++) {
                                 sh "ls modules/${selectedModules[i]}/build/libs/"
                             }
                         } 
