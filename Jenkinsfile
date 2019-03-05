@@ -137,11 +137,11 @@ pipeline {
             }
         }
 
-        stage('Workspace Cleanup') {
-            steps {
-                deleteDir()
-            }
-        }
+        // stage('Workspace Cleanup') {
+        //     steps {
+        //         deleteDir()
+        //     }
+        // }
     }
 }
 
