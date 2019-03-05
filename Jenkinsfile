@@ -187,7 +187,7 @@ def checkoutModule(moduleName, moduleOptions, deployLatestTag, specificTag) {
 /*
  * This method is used to get the module tag based on user input.
  */
-def geModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag){
+def getModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag){
     
     def moduleTag = ""
 
