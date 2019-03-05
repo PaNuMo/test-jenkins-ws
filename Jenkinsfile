@@ -2,7 +2,7 @@
 
 import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
-// This constant has to have as value the same key as the 
+// This constant has to have as value the same value as the 
 // first item of moduleOptions object in JenkinsfileOptions.json 
 final ALL_MODULES = "All"
 
@@ -20,11 +20,13 @@ def serverOptions = {}
 // environments object from JenkinsfileOptions.json
 def serverNames = []
 
-
-def serverDeployPath = ''
+// The latest tag goten from one of the repositories
 def tagVersion = ''
 
+// Initialize global variables
 node {
+    // Checkout workspace here since we have to
+    // get the init values from JenkinsfileOptions.json
     checkout([
         $class: 'GitSCM',
         branches: [[name: '*/master']],
@@ -40,6 +42,7 @@ node {
     serverNames.addAll(serverOptions.keySet())
 }
 
+// Multiple select parameter definition using 'Extended Choice Parameter' plugin
 def selectedModulesParam = new ExtendedChoiceParameterDefinition(
     "selectedModules", // Name
     "PT_CHECKBOX", // Choice type
@@ -52,6 +55,7 @@ def selectedModulesParam = new ExtendedChoiceParameterDefinition(
     "," // Delimiter
 );
 
+// Define Pipeline parameters
 properties([
     parameters([
         selectedModulesParam,
@@ -61,7 +65,7 @@ properties([
     ])
 ])
 
-
+// Start Pipeline
 pipeline {
     agent any
 
@@ -139,9 +143,18 @@ pipeline {
     }
 }
 
+/*
+ * Checkout module
+ * @param moduleName
+ * @param moduleOptions
+ * @param tagVersion
+ * @return tagVersion
+ */
 String checkoutModule(moduleName, moduleOptions, tagVersion) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     def currentTag = ''
+    def isTagVersionEmpty = tagVersion == ''
+
     if(moduleGitUrl != null){
         def splittedUrl = moduleGitUrl.split('/')                    
         def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
@@ -154,7 +167,7 @@ String checkoutModule(moduleName, moduleOptions, tagVersion) {
             userRemoteConfigs: [[url: moduleGitUrl]]
         ])
 
-        if(tagVersion == ''){
+        if(isTagVersionEmpty){
             currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
             echo "Tag found: $currentTag"
         }
@@ -166,5 +179,5 @@ String checkoutModule(moduleName, moduleOptions, tagVersion) {
         echo "ERROR Couldn't find a Git URL for $moduleName"
     }
 
-    return tagVersion != '' ? tagVersion : currentTag
+    return isTagVersionEmpty ? currentTag : tagVersion
 }
