@@ -20,7 +20,12 @@ def serverOptions = {}
 // environments object from JenkinsfileOptions.json
 def serverNames = []
 
-def allModulesSelected = params.selectedModules.split(",")[0]  == ALL_MODULES
+// Have selected modules in array instead of String 
+// returned by ExtendedChoiceParameterDefinition
+def selectedModules = params.selectedModules.split(",")
+
+// Check if 'All' modules option has been selected
+def allModulesSelected = selectedModulesArray[0]  == ALL_MODULES
 
 // Initialize global variables
 node {
@@ -75,9 +80,7 @@ pipeline {
     stages {
         stage('User Acceptance') {
             steps {
-                script {  
-                    def selectedModules = params.selectedModules.split(",")                    
-
+                script {               
                     // Build message to display in the summary for user acceptance
                     def userInputMessage = allModulesSelected ? "Deploying all modules" : "Deploying $selectedModules"
                     userInputMessage += " to ${params.environment} "
@@ -113,7 +116,6 @@ pipeline {
                         }
                     }
                     else {
-                        def selectedModules = params.selectedModules.split(",")
                         // Checkout selected modules
                         for (int i = 0; i < selectedModules.size(); i++) {
                             def moduleName = selectedModules[i]
@@ -145,7 +147,6 @@ pipeline {
                     }
                     else {
                         // Loop throuhg selected modules
-                        def selectedModules = params.selectedModules.split(",")
                         for (int i = 0; i < selectedModules.size(); i++) {
                             sh "ls modules/${selectedModules[i]}/build/libs/"
                         }
