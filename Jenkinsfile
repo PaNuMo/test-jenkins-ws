@@ -119,8 +119,7 @@ pipeline {
         }
 
         stage('Deploy') {           
-            steps {
-                
+            steps {               
                 withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     script{
@@ -156,7 +155,7 @@ pipeline {
 String checkoutModule(moduleName, moduleOptions, tagVersion) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     def currentTag = ''
-    def isTagVersionEmpty = tagVersion == ''
+    def isTagVersionEmpty = tagVersion?.trim()
 
     if(moduleGitUrl != null){
         def splittedUrl = moduleGitUrl.split('/')                    
