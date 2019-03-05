@@ -168,7 +168,7 @@ def checkoutModule(moduleName, moduleOptions, deployLatestTag, specificTag) {
         def modulePath = "modules/${moduleName}"
 
         // If moduleTag is empty then checkout from trunk
-        def moduleUrl = isNullOrEmpty(moduleTag) ? "${checkoutUrl}/trunk" : "${checkoutUrl}/${moduleTag}"
+        def moduleUrl = isNullOrEmpty(moduleTag) ? "${checkoutUrl}/trunk" : "${checkoutUrl}${moduleTag}"
         
         checkout([
             $class: 'SubversionSCM', 
@@ -196,14 +196,14 @@ def getModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag){
             usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
             script{
                 def tagTemp = sh(returnStdout: true, script: "svn list ${checkoutUrl}/tags --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 1")
-                moduleTag = tagTemp.substring(0, tagTemp.indexOf("\n"))     
+                moduleTag = "/tags/$tagTemp"     
             } 
         } 
 
         echo "The latest tag found for $moduleName is $moduleTag"
     }
     else if (!isNullOrEmpty(specificTag)){
-        moduleTag = "tags/$specificTag"
+        moduleTag = "/tags/$specificTag"
     }
 
     return moduleTag
