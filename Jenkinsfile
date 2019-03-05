@@ -20,7 +20,7 @@ def serverOptions = {}
 // environments object from JenkinsfileOptions.json
 def serverNames = []
 
-def allModulesSelected = selectedModules[0] == ALL_MODULES
+def allModulesSelected = params.selectedModules.split(",")[0]  == ALL_MODULES
 
 // Initialize global variables
 node {
@@ -104,9 +104,7 @@ pipeline {
 
         stage('Checkout Module(s)') {
             steps {
-                script {                   
-                    def selectedModules = params.selectedModules.split(",")
-                    
+                script {                                                           
                     // If "All" checkbox was selected
                     if (allModulesSelected) {
                         // Checkout all
@@ -115,6 +113,7 @@ pipeline {
                         }
                     }
                     else {
+                        def selectedModules = params.selectedModules.split(",")
                         // Checkout selected modules
                         for (int i = 0; i < selectedModules.size(); i++) {
                             def moduleName = selectedModules[i]
@@ -146,6 +145,7 @@ pipeline {
                     }
                     else {
                         // Loop throuhg selected modules
+                        def selectedModules = params.selectedModules.split(",")
                         for (int i = 0; i < selectedModules.size(); i++) {
                             sh "ls modules/${selectedModules[i]}/build/libs/"
                         }
