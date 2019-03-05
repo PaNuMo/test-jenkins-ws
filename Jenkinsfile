@@ -114,7 +114,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean deploy'
+                sh './gradlew clean assemble'
             }
         }
 
@@ -126,8 +126,8 @@ pipeline {
                         def serverNodes = serverOptions.get(params.environment)
                         for(int i = 0; i < serverNodes.size(); i++){
                             def node = serverNodes[i]
-                            def nodePath = node[0]
-                            def nodeServer = node[1]
+                            def nodePath = node.get("deployPath")
+                            def nodeServer = node.get("server")
                             echo "Deploying to: $nodeServer"
 
                             sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
@@ -137,11 +137,11 @@ pipeline {
             }
         }
 
-        stage('Workspace Cleanup') {
-            steps {
-                deleteDir()
-            }
-        }
+        // stage('Workspace Cleanup') {
+        //     steps {
+        //         deleteDir()
+        //     }
+        // }
     }
 }
 
