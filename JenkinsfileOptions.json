@@ -15,8 +15,9 @@
     },
     "moduleOptions": {
         "All" : "All",
-        "module1" : "https://github.com/PaNuMo/test-module-one",
-        "module2" : "https://github.com/PaNuMo/test-module-two",
-        "module3" : "https://github.com/PaNuMo/test-module-three"      
+        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance/tags/",
+        "cpmBradHistoryView" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradHistoryView/tags/",
+        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance/tags/",
+        "cpmConsentForm" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmConsentForm/tags/"      
     }
 }

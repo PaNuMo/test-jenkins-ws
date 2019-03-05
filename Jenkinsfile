@@ -153,13 +153,13 @@ pipeline {
  * @return tagVersion
  */
 def checkoutModule(moduleName, moduleOptions, tagVersion) {
-    def moduleGitUrl = moduleOptions.get(moduleName)
+    def checkoutUrl = moduleOptions.get(moduleName)
     def currentTag = ''
-    def isTagVersionEmpty = tagVersion?.trim()
+    def isTagVersionEmpty = !tagVersion?.trim()
 
-    if(moduleGitUrl != null){
-        def splittedUrl = moduleGitUrl.split('/')                    
-        def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
+    if(checkoutUrl != null){
+        def splittedUrl = checkoutUrl.split('/')                    
+        def modulePath = "modules/$moduleName"
       
 
         checkout([
@@ -167,7 +167,7 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
             locations: [[
                 credentialsId: 'svn-server', 
                 local: modulePath, 
-                remote: "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance/tags/${artifactoryVersion}"
+                remote: "${checkoutUrl}${artifactoryVersion}"
             ]]
         ])
 
@@ -180,6 +180,8 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
 
         if(isTagVersionEmpty){
             currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
+            currentTag = sh(returnStdout: true, script: "svn log $checkoutUrl --limit 1").trim()
+
             echo "Tag found: $currentTag"
         }
         else {
