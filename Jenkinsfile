@@ -55,7 +55,7 @@ def selectedModulesParam = new ExtendedChoiceParameterDefinition(
     "," // Delimiter
 );
 
-// Define Pipeline parameters
+// Set Pipeline parameters
 properties([
     parameters([
         selectedModulesParam,
@@ -74,14 +74,15 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout Module(s)') {
             steps {
-                script {
-                    
-                    // Checkout code from Git
+                script {                   
+                    // Checkout code from VCS
                     def selectedModules = params.selectedModules.split(",")
-                    if (selectedModules[0] == ALL_MODULES) {
+                    def allModulesSelected = selectedModules[0] == ALL_MODULES
+                    
+                    // If "All" checkbox was selected
+                    if (allModulesSelected) {
                         // Checkout all
                         for (int i = 1; i < moduleNames.size(); i++) {
                             tagVersion = checkoutModule(moduleNames[i], moduleOptions, tagVersion)
@@ -96,9 +97,11 @@ pipeline {
                         }
                     }
 
-                    def userInputMessage = (selectedModules[0] == ALL_MODULES) ? "Deploying all modules" : "Deploying $selectedModules"
+                    // Define message to display in the summary for user acceptance
+                    def userInputMessage = allModulesSelected ? "Deploying all modules" : "Deploying $selectedModules"
                     userInputMessage += " to ${params.environment}. Version ${tagVersion}."
 
+                    // Wait for 1 minute for user acceptance
                     timeout(time:1, unit:'MINUTES') {
                         userInput = input(
                             id: 'proceedInput', 
@@ -117,7 +120,7 @@ pipeline {
 
         stage('Deploy') {           
             steps {
-                // Using "username with password" Jenkins credentials 
+                
                 withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     script{
