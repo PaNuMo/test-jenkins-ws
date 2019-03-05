@@ -21,7 +21,7 @@ def serverOptions = {}
 def serverNames = []
 
 // The latest tag goten from one of the repositories
-def tagVersion = ''
+def latestTag = ''
 
 // Initialize global variables
 node {
@@ -36,10 +36,8 @@ node {
     withCredentials([usernamePassword(credentialsId: 'svn-server',
         usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
         script{
-
-            def testTag = sh(returnStdout: true, script: "svn log https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance --limit 1 --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 2")
-            testTag = testTag.substring(0, testTag.indexOf("\n"))
-            println("testTag: $testTag")        
+            def latestTagTemp = sh(returnStdout: true, script: "svn log https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance --limit 1 --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 2")
+            latestTag = latestTagTemp.substring(0, latestTagTemp.indexOf("\n"))     
         } 
     }
 
