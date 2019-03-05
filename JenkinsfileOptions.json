@@ -17,7 +17,6 @@
         "All" : "All",
         "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance",
         "cpmBradHistoryView" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradHistoryView",
-        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance",
         "cpmConsentForm" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmConsentForm"      
     }
 }
