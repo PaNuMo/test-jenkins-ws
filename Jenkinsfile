@@ -37,8 +37,8 @@ node {
         usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
         script{
 
-            def tesTag = sh(returnStdout: true, script: "svn log https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance --limit 1 --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD")
-            println(tesTag)        
+            def tesTag = sh(returnStdout: true, script: "svn log https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance --limit 1 --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 2")
+            println("tesTag: $tesTag")        
         } 
     }
 
