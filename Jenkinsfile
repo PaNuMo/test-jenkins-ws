@@ -20,9 +20,6 @@ def serverOptions = {}
 // environments object from JenkinsfileOptions.json
 def serverNames = []
 
-// The latest tag goten from one of the repositories
-def latestTag = ''
-
 // Initialize global variables
 node {
     // Checkout workspace here since we have to
@@ -32,14 +29,6 @@ node {
         branches: [[name: '*/master']],
         userRemoteConfigs: [[url: scm.getUserRemoteConfigs()[0].getUrl()]]
     ])
-
-    withCredentials([usernamePassword(credentialsId: 'svn-server',
-        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-        script{
-            def latestTagTemp = sh(returnStdout: true, script: "svn log https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance --limit 1 --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 2")
-            latestTag = latestTagTemp.substring(0, latestTagTemp.indexOf("\n"))     
-        } 
-    }
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
     
@@ -82,16 +71,23 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Module(s)') {
+        stage('User Acceptance') {
             steps {
-                script {                   
-                    // Checkout code from VCS
-                    def selectedModules = params.selectedModules.split(",")
-                    def allModulesSelected = selectedModules[0] == ALL_MODULES
+                script {  
+                    def selectedModules = params.selectedModules.split(",")                    
 
-                    // Define message to display in the summary for user acceptance
-                    def userInputMessage = allModulesSelected ? "Deploying all modules" : "Deploying $selectedModules"
-                    userInputMessage += " to ${params.environment}. Version ${tagVersion}."
+                    // Build message to display in the summary for user acceptance
+                    def userInputMessage = selectedModules[0] == ALL_MODULES ? "Deploying all modules" : "Deploying $selectedModules"
+                    userInputMessage += " to ${params.environment}."
+                    
+                    def versionMessage = " From trunk."
+                    if(params.deployLatestTag) {
+                        versionMessage =  " Last version of each module."
+                    }
+                    else if (!isNullOrEmpty(params.artifactoryVersion)){
+                        versionMessage =  " Version ${params.artifactoryVersion}."
+                    }
+                    userInputMessage += versionMessage
 
                     // Wait for 1 minute for user acceptance
                     timeout(time:1, unit:'MINUTES') {
@@ -100,12 +96,20 @@ pipeline {
                             message: userInputMessage
                         )
                     }
+                }
+            }
+        }
+
+        stage('Checkout Module(s)') {
+            steps {
+                script {                   
+                    def selectedModules = params.selectedModules.split(",")
                     
                     // If "All" checkbox was selected
-                    if (allModulesSelected) {
+                    if (selectedModules[0] == ALL_MODULES) {
                         // Checkout all
                         for (int i = 1; i < moduleNames.size(); i++) {
-                            tagVersion = checkoutModule(moduleNames[i], moduleOptions, tagVersion)
+                            checkoutModule(moduleNames[i], moduleOptions, params.deployLatestTag, params.artifactoryVersion)
                         }
                     }
                     else {
@@ -113,7 +117,7 @@ pipeline {
                         for (int i = 0; i < selectedModules.size(); i++) {
                             def moduleName = selectedModules[i]
                             def moduleGitUrl = moduleOptions.get(moduleName)
-                            tagVersion = checkoutModule(moduleName, moduleOptions, tagVersion)
+                            checkoutModule(moduleName, moduleOptions, params.deployLatestTag, params.artifactoryVersion)
                         }
                     }                    
                 }
@@ -154,20 +158,17 @@ pipeline {
 }
 
 /*
- * Checkout module
- * @param moduleName
- * @param moduleOptions
- * @param tagVersion
- * @return tagVersion
+ * This method checkouts an specific module from VCS
  */
-def checkoutModule(moduleName, moduleOptions, tagVersion) {
+def checkoutModule(moduleName, moduleOptions, deployLatestTag, specificTag) {
     def checkoutUrl = moduleOptions.get(moduleName)
-    def currentTag = ''
-    def isTagVersionEmpty = isNullOrEmpty(tagVersion)
 
-    if(checkoutUrl != null){                   
+    if(checkoutUrl != null){
+        def moduleTag = getModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag)
         def modulePath = "modules/${moduleName}"
-        def moduleUrl = isNullOrEmpty(params.artifactoryVersion) ? "${checkoutUrl}/trunk" : "${checkoutUrl}/tags/${artifactoryVersion}"
+
+        // If moduleTag is empty then checkout from trunk
+        def moduleUrl = isNullOrEmpty(moduleTag) ? "${checkoutUrl}/trunk" : "${checkoutUrl}/${moduleTag}"
         
         checkout([
             $class: 'SubversionSCM', 
@@ -176,22 +177,36 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
                 local: modulePath, 
                 remote: moduleUrl
             ]]
-        ])
-
-        if(isTagVersionEmpty){
-            currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
-
-            echo "Tag found: $currentTag"
-        }
-        else {
-            echo "Tag version already exists: $tagVersion"
-        }
+        ])       
     }
     else {
         echo "ERROR Couldn't find a Git URL for $moduleName"
     }
+}
 
-    return isTagVersionEmpty ? currentTag : tagVersion
+/*
+ * This method is used to get the module tag based on user input.
+ */
+def geModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag){
+    
+    def moduleTag = ""
+
+    if (deployLatestTag) {
+        withCredentials([usernamePassword(credentialsId: 'svn-server',
+            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+            script{
+                def tagTemp = sh(returnStdout: true, script: "svn log $checkoutUrl --limit 1 --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 2")
+                moduleTag = tagTemp.substring(0, tagTemp.indexOf("\n"))     
+            } 
+        } 
+
+        echo "The latest tag found for $moduleName is $moduleTag"
+    }
+    else if (!isNullOrEmpty(specificTag)){
+        moduleTag = "tags/$specificTag"
+    }
+
+    return moduleTag
 }
 
 def isNullOrEmpty(someString){
