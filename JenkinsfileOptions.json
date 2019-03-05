@@ -15,8 +15,7 @@
     },
     "moduleOptions": {
         "All" : "All",
-        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance",
-        "cpmConsentForm" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmConsentForm",
+        "fatwire-migration" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/fatwire-migration",
         "utlRSPCAUtils" : "https://rspca.svn.beanstalkapp.com/website/modules/utlRSPCAUtils"   
     }
 }
