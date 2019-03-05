@@ -78,14 +78,14 @@ pipeline {
 
                     // Build message to display in the summary for user acceptance
                     def userInputMessage = selectedModules[0] == ALL_MODULES ? "Deploying all modules" : "Deploying $selectedModules"
-                    userInputMessage += " to ${params.environment}."
+                    userInputMessage += " to ${params.environment} "
                     
-                    def versionMessage = " From trunk."
+                    def versionMessage = "(from trunk)"
                     if(params.deployLatestTag) {
-                        versionMessage =  " Last version of each module."
+                        versionMessage =  "(last version of each module)"
                     }
                     else if (!isNullOrEmpty(params.artifactoryVersion)){
-                        versionMessage =  " Version ${params.artifactoryVersion}."
+                        versionMessage =  "(version ${params.artifactoryVersion})"
                     }
                     userInputMessage += versionMessage
 
