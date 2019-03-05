@@ -157,8 +157,7 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
     def currentTag = ''
     def isTagVersionEmpty = !tagVersion?.trim()
 
-    if(checkoutUrl != null){
-        def splittedUrl = checkoutUrl.split('/')                    
+    if(checkoutUrl != null){                   
         def modulePath = "modules/$moduleName"
       
 
