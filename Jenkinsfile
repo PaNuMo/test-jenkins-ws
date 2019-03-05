@@ -114,7 +114,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean assemble'
+                sh './gradlew clean deploy'
             }
         }
 
@@ -137,11 +137,11 @@ pipeline {
             }
         }
 
-        // stage('Workspace Cleanup') {
-        //     steps {
-        //         deleteDir()
-        //     }
-        // }
+        stage('Workspace Cleanup') {
+            steps {
+                deleteDir()
+            }
+        }
     }
 }
 
@@ -152,7 +152,7 @@ pipeline {
  * @param tagVersion
  * @return tagVersion
  */
-String checkoutModule(moduleName, moduleOptions, tagVersion) {
+def checkoutModule(moduleName, moduleOptions, tagVersion) {
     def moduleGitUrl = moduleOptions.get(moduleName)
     def currentTag = ''
     def isTagVersionEmpty = tagVersion?.trim()
@@ -161,13 +161,23 @@ String checkoutModule(moduleName, moduleOptions, tagVersion) {
         def splittedUrl = moduleGitUrl.split('/')                    
         def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-        echo "Start downloading module from $moduleGitUrl"
+        
+
         checkout([
-            $class: 'GitSCM',
-            branches: [[name: '*/master']],
-            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-            userRemoteConfigs: [[url: moduleGitUrl]]
+            $class: 'SubversionSCM', 
+            locations: [[
+                credentialsId: 'svn-server', 
+                local: modulePath, 
+                remote: "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance/tags/${artifactoryVersion}"
+            ]]
         ])
+
+        // checkout([
+        //     $class: 'GitSCM',
+        //     branches: [[name: '*/master']],
+        //     extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+        //     userRemoteConfigs: [[url: moduleGitUrl]]
+        // ])
 
         if(isTagVersionEmpty){
             currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
