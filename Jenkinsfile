@@ -137,11 +137,11 @@ pipeline {
             }
         }
 
-        stage('Workspace Cleanup') {
-            steps {
-                deleteDir()
-            }
-        }
+        // stage('Workspace Cleanup') {
+        //     steps {
+        //         deleteDir()
+        //     }
+        // }
     }
 }
 
@@ -160,8 +160,7 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
     if(moduleGitUrl != null){
         def splittedUrl = moduleGitUrl.split('/')                    
         def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
-
-        
+      
 
         checkout([
             $class: 'SubversionSCM', 
