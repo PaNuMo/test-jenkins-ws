@@ -130,18 +130,18 @@ pipeline {
                             def nodeServer = node.get("server")
                             echo "Deploying to: $nodeServer"
 
-                            sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
+                            //sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
                         }
                     } 
                 }  
             }
         }
 
-        // stage('Workspace Cleanup') {
-        //     steps {
-        //         deleteDir()
-        //     }
-        // }
+        stage('Workspace Cleanup') {
+            steps {
+                deleteDir()
+            }
+        }
     }
 }
 
