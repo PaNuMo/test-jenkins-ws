@@ -25,7 +25,7 @@ def serverNames = []
 def selectedModules = params.selectedModules.split(",")
 
 // Check if 'All' modules option has been selected
-def allModulesSelected = selectedModulesArray[0]  == ALL_MODULES
+def allModulesSelected = selectedModules[0]  == ALL_MODULES
 
 // Initialize global variables
 node {
@@ -135,46 +135,40 @@ pipeline {
 
         stage('Deploy') {           
             steps {     
-                script {    
-                    // If "All" checkbox was selected
-                    if (allModulesSelected) {
-                        println("**** Deploy all")
-                        // Loop through all the modules, skip the first one since that's the 'All' option
-                        for (int i = 1; i < moduleNames.size(); i++) {
-                            
-                            sh "ls modules/${moduleNames[i]}/build/libs/"
+                script {  
+                    def serverNodes = serverOptions.get(params.environment)
+                    for(int i = 0; i < serverNodes.size(); i++){
+                        def node = serverNodes[i]
+                        def nodePath = node.get("deployPath")
+                        def nodeServer = node.get("server")
+                        echo "Deploying to: $nodeServer"
+
+                        //sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
+
+                        // If "All" checkbox was selected
+                        if (allModulesSelected) {
+                            println("**** Deploy all")
+                            // Loop through all the modules, skip the first one since that's the 'All' option
+                            for (int i = 1; i < moduleNames.size(); i++) {                               
+                                sh "ls modules/${moduleNames[i]}/build/libs/"
+                            }
                         }
-                    }
-                    else {
-                        // Loop throuhg selected modules
-                        for (int i = 0; i < selectedModules.size(); i++) {
-                            sh "ls modules/${selectedModules[i]}/build/libs/"
-                        }
-                    } 
+                        else {
+                            // Loop throuhg selected modules
+                            for (int i = 0; i < selectedModules.size(); i++) {
+                                sh "ls modules/${selectedModules[i]}/build/libs/"
+                            }
+                        } 
+                    }                
                 }
-
-                withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
-                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-                    script{
-                        def serverNodes = serverOptions.get(params.environment)
-                        for(int i = 0; i < serverNodes.size(); i++){
-                            def node = serverNodes[i]
-                            def nodePath = node.get("deployPath")
-                            def nodeServer = node.get("server")
-                            echo "Deploying to: $nodeServer"
-
-                            //sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
-                        }
-                    } 
-                }  
             }
         }
 
-        // stage('Workspace Cleanup') {
-        //     steps {
-        //         deleteDir()
-        //     }
-        // }
+        stage('Workspace Cleanup') {
+            steps {
+                deleteDir()
+            }
+        }
     }
 }
 
