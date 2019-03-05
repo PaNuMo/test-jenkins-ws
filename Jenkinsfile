@@ -2,6 +2,9 @@
 
 import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
+// This constant has to be the same key as the first item of moduleOptions object in JenkinsfileOptions.json 
+final ALL_MODULES = "All"
+
 def moduleOptions = {}
 def moduleNames = []
 
@@ -64,7 +67,7 @@ pipeline {
                     
                     // Checkout code from Git
                     def selectedModules = params.selectedModules.split(",")
-                    if (selectedModules[0] == moduleNames[0]) {
+                    if (selectedModules[0] == ALL_MODULES) {
                         // Checkout all
                         for (int i = 1; i < moduleNames.size(); i++) {
                             tagVersion = checkoutModule(moduleNames[i], moduleOptions, tagVersion)
@@ -100,12 +103,13 @@ pipeline {
 
         stage('Deploy') {           
             steps {
+                // Using "username with password" Jenkins credentials 
                 withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     script{
                         def serverNodes = serverOptions.get(params.environment)
                         for(int i = 0; i < serverNodes.size(); i++){
-                            def node = serverNodes.get(i)
+                            def node = serverNodes[i]
                             def nodePath = node.get("deployPath")
                             def nodeServer = node.get("server")
                             echo "Deploying to: $nodeServer"
@@ -134,7 +138,7 @@ String checkoutModule(moduleName, moduleOptions, tagVersion) {
         def splittedUrl = moduleGitUrl.split('/')                    
         def modulePath = 'modules/' + splittedUrl[splittedUrl.length - 1]
 
-        println('Start downloading module from ' + moduleGitUrl)
+        echo "Start downloading module from $moduleGitUrl"
         checkout([
             $class: 'GitSCM',
             branches: [[name: '*/master']],
@@ -144,14 +148,14 @@ String checkoutModule(moduleName, moduleOptions, tagVersion) {
 
         if(tagVersion == ''){
             currentTag = sh(returnStdout: true, script: "cd $modulePath; git tag --sort version:refname | tail -1").trim()
-            println("Tag found: " + currentTag)
+            echo "Tag found: $currentTag"
         }
         else {
-            println("Tag version already exists: " + tagVersion)
+            echo "Tag version already exists: $tagVersion"
         }
     }
     else {
-        println("ERROR: Couldn't find a Git URL for " + moduleName)
+        echo "ERROR Couldn't find a Git URL for $moduleName"
     }
 
     return tagVersion != '' ? tagVersion : currentTag
