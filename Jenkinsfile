@@ -195,7 +195,7 @@ def getModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag){
         withCredentials([usernamePassword(credentialsId: 'svn-server',
             usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
             script{
-                def tagTemp = sh(returnStdout: true, script: "svn log $checkoutUrl --limit 1 --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 2")
+                def tagTemp = sh(returnStdout: true, script: "svn list ${checkoutUrl}/tags --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 1")
                 moduleTag = tagTemp.substring(0, tagTemp.indexOf("\n"))     
             } 
         } 
