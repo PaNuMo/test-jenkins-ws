@@ -150,7 +150,7 @@ pipeline {
                             println("**** Deploy all")
                             // Loop through all the modules, skip the first one since that's the 'All' option
                             for (int x = 1; x < moduleNames.size(); x++) {                               
-                                sh "ls modules/${moduleNames[i]}/build/libs/"
+                                sh "ls modules/${moduleNames[x]}/build/libs/"
                             }
                         }
                         else {
