@@ -155,18 +155,18 @@ pipeline {
 def checkoutModule(moduleName, moduleOptions, tagVersion) {
     def checkoutUrl = moduleOptions.get(moduleName)
     def currentTag = ''
-    def isTagVersionEmpty = !tagVersion?.trim()
+    def isTagVersionEmpty = isNullOrEmpty(tagVersion)
 
     if(checkoutUrl != null){                   
-        def modulePath = "modules/$moduleName"
-      
-
+        def modulePath = "modules/${moduleName}"
+        def moduleUrl = isNullOrEmpty(params.artifactoryVersion) ? "${checkoutUrl}/trunk" : "${checkoutUrl}/tags/${artifactoryVersion}"
+        
         checkout([
             $class: 'SubversionSCM', 
             locations: [[
                 credentialsId: 'svn-server', 
                 local: modulePath, 
-                remote: "${checkoutUrl}${artifactoryVersion}"
+                remote: moduleUrl
             ]]
         ])
 
@@ -192,4 +192,8 @@ def checkoutModule(moduleName, moduleOptions, tagVersion) {
     }
 
     return isTagVersionEmpty ? currentTag : tagVersion
+}
+
+def isNullOrEmpty(someString){
+    return !someString?.trim()
 }

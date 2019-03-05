@@ -15,9 +15,9 @@
     },
     "moduleOptions": {
         "All" : "All",
-        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance/tags/",
-        "cpmBradHistoryView" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradHistoryView/tags/",
-        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance/tags/",
-        "cpmConsentForm" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmConsentForm/tags/"      
+        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance",
+        "cpmBradHistoryView" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradHistoryView",
+        "cpmBradRoleMaintenance" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmBradRoleMaintenance",
+        "cpmConsentForm" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmConsentForm"      
     }
 }
