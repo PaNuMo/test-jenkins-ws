@@ -2,16 +2,26 @@
 
 import com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterDefinition
 
-// This constant has to be the same key as the first item of moduleOptions object in JenkinsfileOptions.json 
+// This constant has to have as value the same key as the 
+// first item of moduleOptions object in JenkinsfileOptions.json 
 final ALL_MODULES = "All"
 
+// The moduleOptions object from JenkinsfileOptions.json
 def moduleOptions = {}
+
+// Array of the module names in the order presented in
+// moduleOptions object from JenkinsfileOptions.json
 def moduleNames = []
 
+// The environments object from JenkinsfileOptions.json
 def serverOptions = {}
-def serverNames = []
-def serverDeployPath = ''
 
+// Array of the server names in the order presented in
+// environments object from JenkinsfileOptions.json
+def serverNames = []
+
+
+def serverDeployPath = ''
 def tagVersion = ''
 
 node {
@@ -82,8 +92,8 @@ pipeline {
                         }
                     }
 
-                    def userInputMessage = (selectedModules[0] == moduleNames[0]) ? "Deploying all modules" : "Deploying " + selectedModules
-                    userInputMessage += " to " + params.environment + ". Version " + tagVersion + "."
+                    def userInputMessage = (selectedModules[0] == ALL_MODULES) ? "Deploying all modules" : "Deploying $selectedModules"
+                    userInputMessage += " to ${params.environment}. Version ${tagVersion}."
 
                     timeout(time:1, unit:'MINUTES') {
                         userInput = input(
@@ -110,11 +120,9 @@ pipeline {
                         def serverNodes = serverOptions.get(params.environment)
                         for(int i = 0; i < serverNodes.size(); i++){
                             def node = serverNodes[i]
-                            def nodePath = node.get("deployPath")
-                            def nodeServer = node.get("server")
+                            def nodePath = node[0]
+                            def nodeServer = node[1]
                             echo "Deploying to: $nodeServer"
-                            
-                            //sh "cp -a bundles/osgi/modules/* $nodePath"
 
                             sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
                         }

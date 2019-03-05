@@ -14,7 +14,7 @@
         "LIVE" : "/home/pnunez/Documents/Liferay/QA-liferay-ce-portal-7.1.2-ga3/osgi/modules/"
     },
     "moduleOptions": {
-        "All" : "all",
+        "All" : "All",
         "module1" : "https://github.com/PaNuMo/test-module-one",
         "module2" : "https://github.com/PaNuMo/test-module-two",
         "module3" : "https://github.com/PaNuMo/test-module-three"      
