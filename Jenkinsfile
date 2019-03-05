@@ -20,6 +20,8 @@ def serverOptions = {}
 // environments object from JenkinsfileOptions.json
 def serverNames = []
 
+def allModulesSelected = selectedModules[0] == ALL_MODULES
+
 // Initialize global variables
 node {
     // Checkout workspace here since we have to
@@ -77,7 +79,7 @@ pipeline {
                     def selectedModules = params.selectedModules.split(",")                    
 
                     // Build message to display in the summary for user acceptance
-                    def userInputMessage = selectedModules[0] == ALL_MODULES ? "Deploying all modules" : "Deploying $selectedModules"
+                    def userInputMessage = allModulesSelected ? "Deploying all modules" : "Deploying $selectedModules"
                     userInputMessage += " to ${params.environment} "
                     
                     def versionMessage = "(from trunk)"
@@ -106,7 +108,7 @@ pipeline {
                     def selectedModules = params.selectedModules.split(",")
                     
                     // If "All" checkbox was selected
-                    if (selectedModules[0] == ALL_MODULES) {
+                    if (allModulesSelected) {
                         // Checkout all
                         for (int i = 1; i < moduleNames.size(); i++) {
                             checkoutModule(moduleNames[i], moduleOptions, params.deployLatestTag, params.artifactoryVersion)
@@ -126,12 +128,30 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean deploy'
+                sh './gradlew clean assemble'
             }
         }
 
         stage('Deploy') {           
-            steps {               
+            steps {     
+                script {    
+                    // If "All" checkbox was selected
+                    if (allModulesSelected) {
+                        println("**** Deploy all")
+                        // Loop through all the modules, skip the first one since that's the 'All' option
+                        for (int i = 1; i < moduleNames.size(); i++) {
+                            
+                            sh "ls modules/${moduleNames[i]}/build/libs/"
+                        }
+                    }
+                    else {
+                        // Loop throuhg selected modules
+                        for (int i = 0; i < selectedModules.size(); i++) {
+                            sh "ls modules/${selectedModules[i]}/build/libs/"
+                        }
+                    } 
+                }
+
                 withCredentials([usernamePassword(credentialsId: 'd2401c82-1cfc-4dc8-ae36-db88555ad209',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     script{
@@ -149,11 +169,11 @@ pipeline {
             }
         }
 
-        stage('Workspace Cleanup') {
-            steps {
-                deleteDir()
-            }
-        }
+        // stage('Workspace Cleanup') {
+        //     steps {
+        //         deleteDir()
+        //     }
+        // }
     }
 }
 
