@@ -22,46 +22,54 @@ def serverNames = []
 
 // Have selected modules in array instead of String 
 // returned by ExtendedChoiceParameterDefinition
-def selectedModules = params.selectedModules.split(",")
+def selectedModules = []
 
 // Check if 'All' modules option has been selected
-def allModulesSelected = selectedModules[0]  == ALL_MODULES
+def allModulesSelected = false
 
 // Initialize global variables
 node {
-
+    // Checkout workspace here to get access to the options json.
+    checkout scm
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
-    
+
     moduleOptions = optionsJSON.get("moduleOptions")
     moduleNames.addAll(moduleOptions.keySet())
 
     serverOptions = optionsJSON.get("environments")
     serverNames.addAll(serverOptions.keySet())
+
+    selectedModules = params.selectedModules?.split(",")
+
+    if (selectedModules) {
+        allModulesSelected = selectedModules[0]  == ALL_MODULES
+    }
+
+    // Multiple select parameter definition using 'Extended Choice Parameter' plugin
+    def selectedModulesParam = new ExtendedChoiceParameterDefinition(
+            "selectedModules", // Name
+            "PT_CHECKBOX", // Choice type
+            moduleNames.join(","), // Items
+            "","","","","","","",
+            "", // Default Value
+            "","","","","","","","","","","","","","","",false,false,
+            10, // Number of visible items
+            "Select modules to build/deploy.", // Description
+            "," // Delimiter
+    )
+
+    // Set Pipeline parameters
+    properties([
+        parameters([
+                selectedModulesParam,
+                choice(choices: serverNames, description: 'Specify the target environment', name: 'environment'),
+                booleanParam(defaultValue: true, description: '', name: 'deployLatestTag'),
+                string(defaultValue: '', description: 'Specify a version to use', name: 'artifactoryVersion')
+        ])
+    ])
 }
 
-// Multiple select parameter definition using 'Extended Choice Parameter' plugin
-def selectedModulesParam = new ExtendedChoiceParameterDefinition(
-    "selectedModules", // Name
-    "PT_CHECKBOX", // Choice type
-    moduleNames.join(","), // Items
-    "","","","","","","",
-    "All", // Default Value
-    "","","","","","","","","","","","","","","",false,false, 
-    10, // Number of visible items
-    "Which module(s) build/deploy?", // Description
-    "," // Delimiter
-);
-
-// Set Pipeline parameters
-properties([
-    parameters([
-        selectedModulesParam,
-        choice(choices: serverNames, description: 'To which environment deploy?', name: 'environment'),  
-        booleanParam(defaultValue: true, description: '', name: 'deployLatestTag'),
-        string(defaultValue: '', description: 'Which version use?', name: 'artifactoryVersion')             
-    ])
-])
 
 // Start Pipeline
 pipeline {
@@ -148,7 +156,7 @@ pipeline {
                         else {
                             // Loop through selected modules
                             for(moduleName in selectedModules){
-                                sh "cp -a modules/${moduleName}/build/libs/* $nodePath"
+                                //sh "cp -a modules/${moduleName}/build/libs/* $nodePath"
                             }
                         } 
                     }                
@@ -171,48 +179,18 @@ def checkoutModule(moduleName, moduleOptions, deployLatestTag, specificTag) {
     def checkoutUrl = moduleOptions.get(moduleName)
 
     if(checkoutUrl != null){
-        def moduleTag = getModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag)
         def modulePath = "modules/${moduleName}"
 
-        // If moduleTag is empty then checkout from trunk
-        def moduleUrl = isNullOrEmpty(moduleTag) ? "${checkoutUrl}/trunk" : "${checkoutUrl}${moduleTag}"
-        
         checkout([
-            $class: 'SubversionSCM', 
-            locations: [[
-                credentialsId: 'svn-server', 
-                local: modulePath, 
-                remote: moduleUrl
-            ]]
+            $class: 'GitSCM',
+            branches: [[name: '*/master']],
+            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
+            userRemoteConfigs: [[url: moduleUrl]]
         ])       
     }
     else {
         echo "ERROR Couldn't find a Git URL for $moduleName"
     }
-}
-
-/*
- * This method is used to get the module tag based on user input.
- */
-def getModuleTag(moduleName, checkoutUrl, deployLatestTag, specificTag){
-    
-    def moduleTag = ""
-
-    if (deployLatestTag) {
-        withCredentials([usernamePassword(credentialsId: 'svn-server',
-            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-            script{
-                def tagTemp = sh(returnStdout: true, script: "svn list ${checkoutUrl}/tags --non-interactive --no-auth-cache --username $USERNAME --password $PASSWORD | tail -n 1")              
-                echo "The latest tag found for $moduleName is $tagTemp"             
-                moduleTag = "/tags/$tagTemp"     
-            } 
-        } 
-    }
-    else if (!isNullOrEmpty(specificTag)){
-        moduleTag = "/tags/$specificTag"
-    }
-
-    return moduleTag
 }
 
 def isNullOrEmpty(someString){

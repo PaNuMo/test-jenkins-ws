@@ -1,6 +1,6 @@
 {
     "environments": {
-        "SYS" : [
+        "DEV" : [
             {   
                 "server" : "node1.com",
                 "deployPath" : "/home/pnunez/Documents/Liferay/liferay-ce-portal-tomcat-7.1.2-ga3-20190107144105508/liferay-ce-portal-7.1.2-ga3/deploy/"
@@ -14,10 +14,9 @@
         "LIVE" : "/home/pnunez/Documents/Liferay/QA-liferay-ce-portal-7.1.2-ga3/osgi/modules/"
     },
     "moduleOptions": {
-        "All" : "All",
-        "cpmDonateAmount" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmDonateAmount",
-        "cpmRSPCASitemap" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/cpmRSPCASitemap",
-        "fatwire-migration" : "https://rspca.svn.beanstalkapp.com/website/modules/portlets/fatwire-migration",
-        "utlRSPCAUtils" : "https://rspca.svn.beanstalkapp.com/website/modules/utlRSPCAUtils"   
+        "All" : "all",
+        "module1" : "https://github.com/PaNuMo/test-module-one",
+        "module2" : "https://github.com/PaNuMo/test-module-two",
+        "module3" : "https://github.com/PaNuMo/test-module-three"      
     }
 }
