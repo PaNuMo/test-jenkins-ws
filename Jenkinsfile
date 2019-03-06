@@ -65,7 +65,7 @@ node {
                 selectedModulesParam,
                 choice(choices: serverNames, description: 'Specify the target environment', name: 'environment'),
                 booleanParam(defaultValue: false, description: '', name: 'deployLatestTag'),
-                string(defaultValue: '', description: 'Specify a version to use', name: 'artifactoryVersion')
+                booleanParam(defaultValue: true, description: '', name: 'deployToServer')
         ])
     ])
 }
@@ -105,14 +105,14 @@ pipeline {
                     if (allModulesSelected) {
                         // Checkout all
                         for (int i = 1; i < moduleNames.size(); i++) {
-                            checkoutModule(moduleNames[i], moduleOptions, params.deployLatestTag, params.artifactoryVersion)
+                            checkoutModule(moduleNames[i], moduleOptions, params.deployLatestTag)
                         }
                     }
                     else {
                         // Checkout selected modules
                         for(moduleName in selectedModules) {
                             def moduleGitUrl = moduleOptions.get(moduleName)
-                            checkoutModule(moduleName, moduleOptions, params.deployLatestTag, params.artifactoryVersion)
+                            checkoutModule(moduleName, moduleOptions, params.deployLatestTag)
                         }
                     }                    
                 }
@@ -125,7 +125,12 @@ pipeline {
             }
         }
 
-        stage('Deploy') {           
+        stage('Deploy') {
+            when {
+                expression {
+                    return params.deployToServer
+                }
+            }           
             steps {     
                 script {  
                     def serverNodes = serverOptions.get(params.environment)
@@ -164,7 +169,7 @@ pipeline {
 /*
  * This method checkouts an specific module from VCS
  */
-def checkoutModule(moduleName, moduleOptions, deployLatestTag, specificTag) {
+def checkoutModule(moduleName, moduleOptions, deployLatestTag) {
     def checkoutUrl = moduleOptions.get(moduleName)
 
     if(checkoutUrl != null){
