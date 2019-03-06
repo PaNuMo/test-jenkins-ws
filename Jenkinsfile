@@ -29,15 +29,7 @@ def allModulesSelected = selectedModules[0]  == ALL_MODULES
 
 // Initialize global variables
 node {
-    // Checkout workspace here since we have to
-    // get the init values from JenkinsfileOptions.json
-    checkout([
-        $class: 'SubversionSCM', 
-        locations: [[
-            credentialsId: 'svn-server', 
-            remote: scm.getUserRemoteConfigs()[0].getUrl()
-        ]]
-    ])
+
 
     def optionsJSON = readJSON file: 'JenkinsfileOptions.json'
     
