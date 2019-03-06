@@ -86,15 +86,6 @@ pipeline {
                     // Build message to display in the summary for user acceptance
                     def userInputMessage = allModulesSelected ? "Deploying all modules" : "Deploying $selectedModules"
                     userInputMessage += " to ${params.environment} "
-                    
-                    def versionMessage = "(from trunk)"
-                    if(params.deployLatestTag) {
-                        versionMessage =  "(last version of each module)"
-                    }
-                    else if (!isNullOrEmpty(params.artifactoryVersion)){
-                        versionMessage =  "(version ${params.artifactoryVersion})"
-                    }
-                    userInputMessage += versionMessage
 
                     // Wait for 1 minute for user acceptance
                     timeout(time:1, unit:'MINUTES') {
