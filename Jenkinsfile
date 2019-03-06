@@ -144,8 +144,6 @@ pipeline {
                         def nodeServer = node.get("server")
                         echo "Deploying to: $nodeServer"
 
-                        //sh "scp -r bundles/osgi/modules $USERNAME@$nodeServer:$nodePath"
-
                         // If "All" checkbox was selected
                         if (allModulesSelected) {
                             // Loop through all the modules, skip the first one since that's the 'All' option
@@ -156,7 +154,7 @@ pipeline {
                         else {
                             // Loop through selected modules
                             for(moduleName in selectedModules){
-                                //sh "cp -a modules/${moduleName}/build/libs/* $nodePath"
+                                sh "cp -a modules/${moduleName}/build/libs/* $nodePath"
                             }
                         } 
                     }                
