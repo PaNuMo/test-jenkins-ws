@@ -64,7 +64,7 @@ node {
         parameters([
                 selectedModulesParam,
                 choice(choices: serverNames, description: 'Specify the target environment', name: 'environment'),
-                booleanParam(defaultValue: true, description: '', name: 'deployLatestTag'),
+                booleanParam(defaultValue: false, description: '', name: 'deployLatestTag'),
                 string(defaultValue: '', description: 'Specify a version to use', name: 'artifactoryVersion')
         ])
     ])
@@ -183,7 +183,7 @@ def checkoutModule(moduleName, moduleOptions, deployLatestTag, specificTag) {
             $class: 'GitSCM',
             branches: [[name: '*/master']],
             extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: modulePath]],
-            userRemoteConfigs: [[url: moduleUrl]]
+            userRemoteConfigs: [[url: checkoutUrl]]
         ])       
     }
     else {
