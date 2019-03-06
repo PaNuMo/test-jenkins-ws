@@ -158,11 +158,24 @@ pipeline {
             }
         }
 
+        stage('Test stage') {
+            steps {
+                deleteDir()
+            }
+        }
         stage('Workspace Cleanup') {
             steps {
                 deleteDir()
             }
         }
+
+        stage('Test End stage') {
+            steps {
+                deleteDir()
+            }
+        }
+
+
     }
 }
 
